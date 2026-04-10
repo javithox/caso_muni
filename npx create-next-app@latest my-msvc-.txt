@@ -1,2 +1,7 @@
 npx create-next-app@latest my-msvc-project
 npm install -g
+npm install -g npm@11.12.1
+
+npm install lucide-react
+
+npm run dev
