@@ -5,3 +5,8 @@ npm install -g npm@11.12.1
 npm install lucide-react
 
 npm run dev
+
+
+comando para vercel
+
+npx plugins add vercel/vercel-plugin
