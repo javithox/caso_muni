@@ -9,4 +9,10 @@ npm run dev
 
 comando para vercel
 
+cd my-msvc-valle-del-sol
+npx tsc --noEmit
+npm run dev
+
+npm install @vercel/blob
+
 npx plugins add vercel/vercel-plugin
