@@ -1,17 +1,42 @@
-"use client";
+
+import Link from "next/link";
+import "./estilos/estilo-pagina.css";
 
 export default function IniciarSesion() {
-    return(
-        <div>
-          <h1>iniciar sesion</h1>
-          <ul className="lista de botones">
-            <a href="/" className="btn-nav">Home</a>
-            <a href="/reportes" className="btn-nav">Reportes</a>
-            <a href="/geolocalizacion" className="btn-nav">Geolocalización</a>
-            <a href="/iniciarSesion" className="btn-nav">Iniciar Sesion</a>
-            <a href="/registrarse" className="btn-nav">Registrarse</a>
-          </ul>
-        </div>
+  return (
+    <main>
 
-    );
+      {/* TÍTULO */}
+      <h1 className="titulo-pagina">Iniciar Sesión</h1>
+
+      {/* NAV */}
+      <nav>
+        <ul className="lista-de-botones">
+          <li><Link href="/" className="btn-nav">Home</Link></li>
+          <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>
+          <li><Link href="/geolocalizacion" className="btn-nav">Geolocalización</Link></li>
+          <li><Link href="/iniciarSesion" className="btn-nav">Iniciar Sesión</Link></li>
+          <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
+        </ul>
+      </nav>
+
+      {/* FORMULARIO */}
+      <section className="form-container">
+
+        <form className="form-login">
+
+          <label>Email</label>
+          <input type="email" placeholder="Ingresa tu email" required />
+
+          <label>Contraseña</label>
+          <input type="password" placeholder="Ingresa tu contraseña" required />
+
+          <button type="submit">Ingresar</button>
+
+        </form>
+
+      </section>
+
+    </main>
+  );
 }

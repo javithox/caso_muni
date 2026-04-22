@@ -4,6 +4,8 @@ import type { PutBlobResult } from "@vercel/blob";
 import { upload } from "@vercel/blob/client";
 import { useState, useRef, FormEvent } from "react";
 import Link from "next/link";
+import "../estilos/estiloReporte.css";
+
 
 export default function Reportes() {
   const inputFileRef = useRef<HTMLInputElement>(null);
@@ -37,7 +39,7 @@ export default function Reportes() {
       const newBlob = await upload(file.name, file, {
         access: "public",
         handleUploadUrl: "/api/upload",
-        onUploadProgress: (event) => {
+        onUploadProgress: (event: { percentage: number }) => {
           setProgress(event.percentage);
         },
       });
