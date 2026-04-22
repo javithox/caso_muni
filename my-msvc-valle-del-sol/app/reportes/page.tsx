@@ -1,7 +1,7 @@
 
 "use client";
 import type {PutBlobResult} from '@vercel/blob';
-import {handleUpload, upload} from '@vercel/blob/client';
+import upload from '@vercel/blob/client';
 import {useState, useRef, FormEvent} from 'react';
 
 export default function Reportes(){
