@@ -1,4 +1,4 @@
-
+"use client";
 import Registrarse from "./Registrarse/page";
 import IniciarSesion from "./IniciarSesion/page";
 import Reportes from "./reportes/page";
