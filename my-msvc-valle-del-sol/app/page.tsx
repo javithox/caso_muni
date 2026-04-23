@@ -1,6 +1,6 @@
 "use client";
-import Registrarse from "./Registrarse/page";
-import IniciarSesion from "./IniciarSesion/page";
+import Registrarse from "./registrarse/page";
+import IniciarSesion from "./iniciarsesion/page";
 import Reportes from "./reportes/page";
 import Image from "next/image";
 

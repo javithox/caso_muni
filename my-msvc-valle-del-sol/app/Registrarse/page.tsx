@@ -1,12 +1,14 @@
 "use client";
 
+
 import Link from "next/link";
-import "../estilos/estilo-pagina.css";
+import "../estilos/estilo-registrarse.css";
+
 
 export default function Registrarse() {
     return(
         <main>
-          <h1 className="titulo-pagina">Registrarse</h1>
+          
           <nav>
             <ul className="lista-de-botones">
               <li><Link href="/" className="btn-nav">Home</Link></li>
@@ -16,7 +18,21 @@ export default function Registrarse() {
               <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
             </ul>
           </nav>
-          {/* Aquí puedes agregar el formulario de registro o contenido adicional */}
+          <h1 className="titulo-pagina">Registrarse</h1>
+          <section className="form-container">
+            <form className="form-registro">
+              <label>Nombre</label>
+              <input type="text" placeholder="Ingresa tu nombre" required />
+
+              <label>Email</label>
+              <input type="email" placeholder="Ingresa tu email" required />
+
+              <label>Contraseña</label>
+              <input type="password" placeholder="Crea una contraseña" required />
+
+              <button type="submit">Registrarse</button>
+            </form>
+          </section>
         </main>
     );
 }
