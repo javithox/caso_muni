@@ -6,7 +6,7 @@ import Image from "next/image";
 
 
 import Link from "next/link";
-import "./estilos/estilo-pagina.css";
+import "../app/estilos/estilo-pagina.css";
 
 export default function Home() {
   return (
@@ -16,7 +16,7 @@ export default function Home() {
       <h1 className="titulo-pagina">Valle del Sol</h1>
 
       {/* NAV */}
-      <nav>
+      <nav className="nav_botones">
         <ul className="lista-de-botones">
           <li><Link href="/" className="btn-nav">Home</Link></li>
           <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>

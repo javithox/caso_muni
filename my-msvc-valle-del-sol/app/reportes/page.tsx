@@ -1,7 +1,7 @@
 "use client";
 
 import type { PutBlobResult } from "@vercel/blob";
-import { upload } from "@vercel/blob/client";
+import { put } from "@vercel/blob";
 import { useState, useRef, FormEvent } from "react";
 import Link from "next/link";
 import "../estilos/estiloReporte.css";
@@ -36,14 +36,12 @@ export default function Reportes() {
     setProgress(0);
 
     try {
-      const newBlob = await upload(file.name, file, {
+      const newBlob = await put(file.name, file, {
         access: "public",
-        handleUploadUrl: "/api/upload",
         onUploadProgress: (event: { percentage: number }) => {
           setProgress(event.percentage);
         },
       });
-
       setBlob(newBlob);
     } catch (error) {
       console.error(error);
@@ -56,15 +54,15 @@ export default function Reportes() {
   return (
     <main>
       {/* NAV */}
-      <div>
+      <nav>
         <ul className="lista-de-botones">
           <li><Link href="/" className="btn-nav">Home</Link></li>
           <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>
           <li><Link href="/geolocalizacion" className="btn-nav">Geolocalización</Link></li>
-          <li><Link href="/iniciarSesion" className="btn-nav">Iniciar Sesión</Link></li>
+          <li><Link href="/iniciarsesion" className="btn-nav">Iniciar Sesión</Link></li>
           <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
         </ul>
-      </div>
+      </nav>
 
       {/* CONTENIDO */}
       <div className="contenedor-video">
