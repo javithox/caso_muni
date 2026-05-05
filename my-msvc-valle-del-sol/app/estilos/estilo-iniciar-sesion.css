@@ -2,9 +2,6 @@
 @import "tailwindcss";
 
 /* Estilos específicos para la página de Iniciar Sesión */
-main {
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
-}
 
 .form-login {
   background: var(--background);

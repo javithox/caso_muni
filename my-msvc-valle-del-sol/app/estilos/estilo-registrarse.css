@@ -1,10 +1,6 @@
 /* Importar estilos base */
 @import "tailwindcss";
-
 /* Estilos específicos para la página de Registro */
-main {
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
-}
 
 .form-registro {
   background: var(--background);
