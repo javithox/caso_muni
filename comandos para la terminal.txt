@@ -1,0 +1,8 @@
+# 1. Crear bases de datos
+psql -U postgres -f backend/crear_bases_datos.sql
+
+# 2. Compilar
+cd backend && mvn clean install
+
+# 3. Ejecutar (3 terminales)
+mvn spring-boot:run  # cada uno en su terminal
