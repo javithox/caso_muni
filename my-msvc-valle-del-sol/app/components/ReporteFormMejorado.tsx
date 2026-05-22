@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Reporte, GeolocationResponse } from '@/types/reporte';
 import reporteApi from '@/utils/reporteApi';
-import GoogleMapsComponent from './GoogleMapsComponent';
+import GoogleMapsComponent from './OpenStreetMapComponent';
 import { AlertCircle, MapPin, CheckCircle, XCircle } from 'lucide-react';
 
 interface ReporteFormProps {
@@ -285,7 +285,7 @@ const ReporteForm: React.FC<ReporteFormProps> = ({ onSubmit, initialData }) => {
         {/* SECCIÓN 2: UBICACIÓN CON GOOGLE MAPS */}
         <div className="border-t-4 border-green-500 pt-4">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            📍 Ubicación (Google Maps)
+            📍 Ubicación (One StreetMaps)
           </h3>
 
           <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
