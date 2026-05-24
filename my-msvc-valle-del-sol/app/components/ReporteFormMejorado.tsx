@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Reporte, GeolocationResponse } from '@/types/reporte';
 import reporteApi from '@/utils/reporteApi';
-import GoogleMapsComponent from './OpenStreetMapComponent';
+import MapContainer from './OpenStreetMapComponent';
 import { AlertCircle, MapPin, CheckCircle, XCircle } from 'lucide-react';
 
 interface ReporteFormProps {
@@ -337,8 +337,8 @@ const ReporteForm: React.FC<ReporteFormProps> = ({ onSubmit, initialData }) => {
           )}
 
           {/* Mapa */}
-          <GoogleMapsComponent
-            markers={markers}
+          <MapContainer
+            markers ={markers}
             center={{ lat: formData.latitud, lng: formData.longitud }}
             onMapClick={handleMapMarkerClick}
             height="300px"

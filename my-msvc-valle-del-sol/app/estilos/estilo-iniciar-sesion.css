@@ -1,5 +1,6 @@
 /* Importar estilos base */
 @import "tailwindcss";
+@import "./estilo-pagina.css";
 
 /* Estilos específicos para la página de Iniciar Sesión */
 

@@ -4,6 +4,9 @@ npm install -g npm@11.12.1
 
 npm install lucide-react
 
+npm install react-leaflet leaflet
+npm install --save-dev @types/leaflet
+
 npm run dev
 
 
