@@ -6,6 +6,20 @@ import L from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:
+    "https://cdn-icons-png.flaticon.com/512/785/785116.png",
+
+  iconUrl:
+    "https://cdn-icons-png.flaticon.com/512/785/785116.png",
+
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+});
+
+
 export default function OpenStreetMapComponent() {
   const mapRef = useRef<HTMLDivElement | null>(
     null
