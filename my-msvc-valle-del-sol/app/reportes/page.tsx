@@ -5,8 +5,24 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Reportes() {
+  const [ubicacion, setUbicacion] =
+  useState<any>(null);
+
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
+
+  useEffect(() => {
+  const ubicacionGuardada =
+    localStorage.getItem(
+      "ubicacionIncendio"
+    );
+
+  if (ubicacionGuardada) {
+    setUbicacion(
+      JSON.parse(ubicacionGuardada)
+    );
+  }
+}, []);
 
   const [latitud, setLatitud] =
     useState("");
@@ -18,12 +34,9 @@ export default function Reportes() {
     const reporte = {
       titulo,
       descripcion,
-
-      ubicacion: {
-        lat: parseFloat(latitud),
-        lng: parseFloat(longitud),
-      },
+      ubicacion,
     };
+
 
     console.log(reporte);
 
@@ -31,21 +44,19 @@ export default function Reportes() {
       "reporteIncendio",
       JSON.stringify(reporte)
     );
+     localStorage.removeItem(
+    "ubicacionIncendio"
+    );
+      // LIMPIAR FORMULARIO
+      setTitulo("");
+      setDescripcion("");
+      setUbicacion(null);
+
 
     alert("Reporte enviado");
-  };
-  useEffect(() => {
-    const ubicacionGuardada =
-      localStorage.getItem(
-        "ubicacionIncendio"
-      );
-
-  if (ubicacionGuardada) {
-    setUbicacion(
-      JSON.parse(ubicacionGuardada)
-    );
-  }
-}, []);
+    window.location.href ="/geolocalizacion";
+  
+    };
 
   return (
     <main>
@@ -104,7 +115,7 @@ export default function Reportes() {
           gap: "10px",
           maxWidth: "400px",
         }}
-      >
+      />
         <input
           type="text"
           placeholder="Título"
@@ -117,39 +128,37 @@ export default function Reportes() {
         <textarea
           placeholder="Descripción"
           value={descripcion}
-          onChange={(e) =>
-            setDescripcion(e.target.value)
-          }
+          onChange={(e) => setDescripcion(e.target.value)}
         />
 
-        <input
-          type="number"
-          step="any"
-          placeholder="Latitud"
-          value={latitud}
-          onChange={(e) =>
-            setLatitud(e.target.value)
-          }
-        />
+        {ubicacion && (
+          <div
+            style={{
+              marginTop: "15px",
+              padding: "10px",
+              border: "1px solid gray",
+              borderRadius: "8px",
+            }}
+          >
+            <h3>
+              📍 Ubicación seleccionada
+            </h3>
 
-        <input
-          type="number"
-          step="any"
-          placeholder="Longitud"
-          value={longitud}
-          onChange={(e) =>
-            setLongitud(e.target.value)
-          }
-        />
+            <p>
+              <strong>Latitud:</strong>{" "}
+              {ubicacion.lat}
+            </p>
+
+            <p>
+              <strong>Longitud:</strong>{" "}
+              {ubicacion.lng}
+            </p>
+          </div>
+        )}
 
         <button onClick={enviarReporte}>
           Enviar Reporte
         </button>
-      </div>
     </main>
   );
-}
-
-function setUbicacion(arg0: any) {
-  throw new Error("Function not implemented.");
 }
