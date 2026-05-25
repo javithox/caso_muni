@@ -107,9 +107,63 @@ export default function OpenStreetMapComponent() {
   
 
   return (
+  <div style={{ position: "relative" }}>
+
     <div
       ref={mapRef}
       className="w-full h-[500px] rounded-xl overflow-hidden"
     />
+    <button
+      onClick={() => {
+        const ubicacion =
+          localStorage.getItem(
+            "ubicacionIncendio"
+          );
+          
+
+        if (!ubicacion) {
+          alert(
+            "Selecciona una ubicación en el mapa"
+          );
+
+          return;
+        }
+
+        window.location.href =
+          "/reportes";
+      }}
+      disabled={!localStorage.getItem("ubicacionIncendio")}
+
+      style={{
+        position: "absolute",
+
+        bottom: "20px",
+
+        right: "20px",
+
+        zIndex: 1000,
+
+        backgroundColor: "#dc2626",
+
+        color: "white",
+
+        padding: "12px 20px",
+
+        border: "none",
+
+        borderRadius: "10px",
+
+        fontWeight: "bold",
+
+        cursor: "pointer",
+
+        boxShadow:
+          "0px 4px 10px rgba(0,0,0,0.3)",
+      }}
+    >
+      🔥 Hacer Reporte
+    </button>
+
+  </div>
   );
 }

@@ -60,9 +60,9 @@ export default function Reportes() {
 
   return (
     <main>
-      <h1>🔥 Reportar Incendio</h1>
+      <h1 style={{bottom:'100px'}}>🔥 Reportar Incendio</h1>
 
-      <nav>
+      <nav style={{ fontSize: "8px"}}>
         <ul className="lista-de-botones">
           <li>
             <Link href="/" className="btn-nav">
@@ -116,7 +116,7 @@ export default function Reportes() {
           maxWidth: "400px",
         }}
       />
-        <input
+        <input style={{boxShadow:'2px 2px 2px 2px', margin:'10px'}}
           type="text"
           placeholder="Título"
           value={titulo}
@@ -125,7 +125,7 @@ export default function Reportes() {
           }
         />
 
-        <textarea
+        <textarea style={{boxShadow:'2px 2px 2px 2px', margin:'10px'}}
           placeholder="Descripción"
           value={descripcion}
           onChange={(e) => setDescripcion(e.target.value)}
@@ -156,7 +156,7 @@ export default function Reportes() {
           </div>
         )}
 
-        <button onClick={enviarReporte}>
+        <button onClick={enviarReporte} style={{backgroundColor:"red", borderRadius:'7%',boxShadow:'5px 5px 5px 5px' ,fontSize:'20px', margin:'10px'}}>
           Enviar Reporte
         </button>
     </main>

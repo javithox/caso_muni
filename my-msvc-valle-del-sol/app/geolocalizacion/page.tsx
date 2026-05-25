@@ -13,11 +13,11 @@ const OpenStreetMapComponent = dynamic(
 export default function Home() {
   return (
     <main className="p-4">
-      <h1 className="text-2xl font-bold mb-4" style={{backgroundColor: "rgba(15, 23, 42, 0.92)", color: "white", padding: "10px", borderRadius: "5px"}}>
+                  {/* NAV */}
+      <nav style={{ fontSize: "8px"}}>
+        <h1 className="text-2xl font-bold mb-4" style={{backgroundColor: "#334155", color: "white", padding: "10px", borderRadius: "5px"}}>
         Mapa de inscendios valle del sol.
       </h1>
-                  {/* NAV */}
-      <nav>
         <ul className="lista-de-botones">
           <li><Link href="/" className="btn-nav">Home</Link></li>
           <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>

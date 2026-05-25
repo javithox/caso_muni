@@ -9,7 +9,7 @@ export default function Registrarse() {
     return(
         <main>
           
-          <nav>
+          <nav style={{ fontSize: "8px"}}>
             <ul className="lista-de-botones">
               <li><Link href="/" className="btn-nav">Home</Link></li>
               <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>
