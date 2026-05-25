@@ -1,101 +1,155 @@
 "use client";
 
-import type { PutBlobResult } from "@vercel/blob";
-import { put } from "@vercel/blob";
-import { useState, useRef, FormEvent } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import "../estilos/estiloReporte.css";
-
+import { useEffect } from "react";
 
 export default function Reportes() {
-  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [titulo, setTitulo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
 
-  const [blob, setBlob] = useState<PutBlobResult | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState<number>(0);
+  const [latitud, setLatitud] =
+    useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const [longitud, setLongitud] =
+    useState("");
 
-    const files = inputFileRef.current?.files;
+  const enviarReporte = async () => {
+    const reporte = {
+      titulo,
+      descripcion,
 
-    if (!files || files.length === 0) {
-      alert("Selecciona un archivo primero");
-      return;
-    }
+      ubicacion: {
+        lat: parseFloat(latitud),
+        lng: parseFloat(longitud),
+      },
+    };
 
-    const file = files[0];
+    console.log(reporte);
 
-    // Validación de tipo
-    if (!file.type.startsWith("video/")) {
-      alert("Solo se permiten videos");
-      return;
-    }
+    localStorage.setItem(
+      "reporteIncendio",
+      JSON.stringify(reporte)
+    );
 
-    setUploading(true);
-    setProgress(0);
-
-    try {
-      const newBlob = await put(file.name, file, {
-        access: "public",
-        onUploadProgress: (event: { percentage: number }) => {
-          setProgress(event.percentage);
-        },
-      });
-      setBlob(newBlob);
-    } catch (error) {
-      console.error(error);
-      alert("Error al subir el video");
-    } finally {
-      setUploading(false);
-    }
+    alert("Reporte enviado");
   };
+  useEffect(() => {
+    const ubicacionGuardada =
+      localStorage.getItem(
+        "ubicacionIncendio"
+      );
+
+  if (ubicacionGuardada) {
+    setUbicacion(
+      JSON.parse(ubicacionGuardada)
+    );
+  }
+}, []);
 
   return (
     <main>
-      {/* NAV */}
+      <h1>🔥 Reportar Incendio</h1>
+
       <nav>
         <ul className="lista-de-botones">
-          <li><Link href="/" className="btn-nav">Home</Link></li>
-          <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>
-          <li><Link href="/geolocalizacion" className="btn-nav">Geolocalización</Link></li>
-          <li><Link href="/iniciarsesion" className="btn-nav">Iniciar Sesión</Link></li>
-          <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
+          <li>
+            <Link href="/" className="btn-nav">
+              Home
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="/reportes"
+              className="btn-nav"
+            >
+              Reportes
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="/geolocalizacion"
+              className="btn-nav"
+            >
+              Geolocalización
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="/iniciarsesion"
+              className="btn-nav"
+            >
+              Iniciar Sesión
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              href="/registrarse"
+              className="btn-nav"
+            >
+              Registrarse
+            </Link>
+          </li>
         </ul>
       </nav>
 
-      {/* CONTENIDO */}
-      <div className="contenedor-video">
-        <h1 className="titulo-reportes">Reportes</h1>
-        <h2>Subir video desde tu dispositivo</h2>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          maxWidth: "400px",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Título"
+          value={titulo}
+          onChange={(e) =>
+            setTitulo(e.target.value)
+          }
+        />
 
-        <form onSubmit={handleSubmit}>
-          <input ref={inputFileRef} type="file" accept="video/*" />
+        <textarea
+          placeholder="Descripción"
+          value={descripcion}
+          onChange={(e) =>
+            setDescripcion(e.target.value)
+          }
+        />
 
-          <button type="submit" disabled={uploading}>
-            {uploading ? `Subiendo... ${progress.toFixed(0)}%` : "Subir Video"}
-          </button>
-        </form>
+        <input
+          type="number"
+          step="any"
+          placeholder="Latitud"
+          value={latitud}
+          onChange={(e) =>
+            setLatitud(e.target.value)
+          }
+        />
 
-        {/* BARRA PROGRESO */}
-        {uploading && (
-          <div style={{ marginTop: "10px" }}>
-            <progress value={progress} max="100" />
-          </div>
-        )}
+        <input
+          type="number"
+          step="any"
+          placeholder="Longitud"
+          value={longitud}
+          onChange={(e) =>
+            setLongitud(e.target.value)
+          }
+        />
 
-        {/* RESULTADO */}
-        {blob && (
-          <div>
-            <h3>Video subido con éxito:</h3>
-            <a href={blob.url} target="_blank" rel="noopener noreferrer">
-              {blob.url}
-            </a>
-
-            <video width="400" controls src={blob.url}></video>
-          </div>
-        )}
+        <button onClick={enviarReporte}>
+          Enviar Reporte
+        </button>
       </div>
     </main>
   );
+}
+
+function setUbicacion(arg0: any) {
+  throw new Error("Function not implemented.");
 }

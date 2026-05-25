@@ -6,7 +6,7 @@ import "../estilos/estilo-geolocalizacion.css";
 const OpenStreetMapComponent = dynamic(
   () => import("@/app/components/OpenStreetMapComponent"),
   {
-    ssr: true,
+    ssr: false,
   }
 );
 
