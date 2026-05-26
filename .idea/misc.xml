@@ -5,7 +5,15 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/backend/pom.xml" />
+        <option value="$PROJECT_DIR$/backend1.1/pom.xml" />
+        <option value="$PROJECT_DIR$/backend1.1/msvc-geolocalizacion/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/backend1.1/msvc-alerta/pom.xml" />
+        <option value="$PROJECT_DIR$/backend1.1/msvc-geolocalizacion/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
