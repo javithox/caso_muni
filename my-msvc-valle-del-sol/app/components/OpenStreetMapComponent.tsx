@@ -40,9 +40,9 @@ export default function OpenStreetMapComponent() {
       13
     );
 
-    // TILE LAYER
+    // TILE LAYER esto es para cambiar estilo de mapa
     L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+      "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png",
       {
         attribution:
           "&copy; OpenStreetMap contributors",
