@@ -131,7 +131,11 @@ export default function OpenStreetMapComponent() {
 
         window.location.href =
           "/reportes";
+
+        
+        
       }}
+      
       disabled={!localStorage.getItem("ubicacionIncendio")}
 
       style={{

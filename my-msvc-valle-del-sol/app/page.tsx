@@ -46,14 +46,14 @@ export default function Home() {
 
         <h2 className="titulo-seccion">Objetivo</h2>
         <ul>
-          <li>Reportar incendios en tiempo real</li>
-          <li>Visualizar ubicaciones</li>
-          <li>Apoyar autoridades</li>
+          <li>Reportar incendios en tiempo real para los reportes</li>
+          <li>Visualizar ubicaciones en tiempo real para ubicar las flamas de fuego</li>
+          <li>Apoyar autoridades a la busqueda de inscendios para que sea una comunidad contra inscendios segura</li>
         </ul>
 
         <h2 className="titulo-seccion">Importancia</h2>
         <p>
-          La detección temprana reduce daños, protege vidas y evita la propagación del fuego.
+          La detección temprana del fuego reduce daños, protege vidas que pueden estar en riesgo y evita la peligrosa propagación del fuego.
         </p>
 
         {/* BOTÓN */}
