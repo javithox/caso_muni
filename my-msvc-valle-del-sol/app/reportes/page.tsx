@@ -101,7 +101,7 @@ export default function Reportes() {
 
     const response =
       await fetch(
-        "http://localhost:8080/reportes",
+        `${process.env.NEXT_PUBLIC_API_URL}/reportes`,
         {
 
           method: "POST",
