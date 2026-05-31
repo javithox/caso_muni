@@ -31,135 +31,32 @@ export default function Reportes() {
     useState("");
 
   const enviarReporte = async () => {
+    const reporte = {
+      titulo,
+      descripcion,
+      ubicacion,
+    };
 
-  if (!ubicacion) {
 
-    alert(
-      "Selecciona una ubicación"
+    console.log(reporte);
+
+    localStorage.setItem(
+      "reporteIncendio",
+      JSON.stringify(reporte)
     );
-
-    return;
-  }
-
-  const reporte = {
-
-    titulo,
-
-    descripcion,
-
-    latitud: ubicacion.lat,
-
-    longitud: ubicacion.lng,
-
-    ubicacionId:
-      crypto.randomUUID(),
-
-    direccion:
-      "Ubicación seleccionada",
-
-    placeMapsId: "",
-
-    estado: "PENDIENTE",
-
-    reportadoPor:
-      "Usuario",
-
-    contactoEmergencia: "",
-
-    nivelSeveridad: 3,
-
-    areaAfectada: 0,
-
-    radioInfluencia: 0,
-
-    fuenteIgnicion: "",
-
-    vegetacionAfectada: "",
-
-    peligroPersonas: false,
-
-    peligroInfraestructura: false,
-
-    presenciaHumo: true,
-
-    velocidadViento: 0,
-
-    temperatura: 0,
-
-    accionesTomadas: "",
-
-    observaciones: "",
-
-    url_foto: "",
-
-    url_video: "",
-
-    fotosUrls: "",
-  };
-
-  try {
-
-    const response =
-      await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/reportes`,
-        {
-
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-
-          body: JSON.stringify(
-            reporte
-          ),
-        }
-      );
-
-    if (!response.ok) {
-
-      throw new Error(
-        "Error enviando reporte"
-      );
-    }
-
-    const data =
-      await response.json();
-
-    console.log(
-      "Reporte guardado:",
-      data
+     localStorage.removeItem(
+    "ubicacionIncendio"
     );
+      // LIMPIAR FORMULARIO
+      setTitulo("");
+      setDescripcion("");
+      setUbicacion(null);
 
-    // LIMPIAR UBICACIÓN
-    localStorage.removeItem(
-      "ubicacionIncendio"
-    );
 
-    // LIMPIAR FORMULARIO
-    setTitulo("");
-
-    setDescripcion("");
-
-    setUbicacion(null);
-
-    alert(
-      "🔥 Reporte enviado"
-    );
-
-    window.location.href =
-      "/geolocalizacion";
-
-  } catch (error) {
-
-    console.error(error);
-
-    alert(
-      "Error conectando backend"
-    );
-  }
-};
+    alert("Reporte enviado");
+    window.location.href ="/geolocalizacion";
+  
+    };
 
   return (
     <main>
