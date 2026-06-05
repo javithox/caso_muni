@@ -31,21 +31,49 @@ export default function Reportes() {
     useState("");
 
   const enviarReporte = async () => {
-    const reporte = {
+  try {
+    if (!ubicacion) {
+      alert("Seleccione una ubicación");
+      return;
+    }
+
+const response = await fetch(
+  "http://localhost:8081/api/reportes",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       titulo,
       descripcion,
-      ubicacion,
-    };
+      latitud: ubicacion.lat,
+      longitud: ubicacion.lng,
+      severidad: 3,
+      usuarioId: 1,
+    }),
+  }
+);
 
+const data = await response.json();
 
-    console.log(reporte);
+console.log("STATUS:", response.status);
+console.log("RESPUESTA:", data);
 
-    localStorage.setItem(
-      "reporteIncendio",
-      JSON.stringify(reporte)
-    );
-     localStorage.removeItem(
-    "ubicacionIncendio"
+if (!response.ok) {
+  throw new Error(
+    data.message || JSON.stringify(data)
+  );
+}
+
+    alert("Reporte enviado correctamente");
+  } catch (error) {
+    console.error(error);
+    alert("Error enviando reporte");
+  }
+
+    localStorage.removeItem(
+      "ubicacionIncendio"
     );
       // LIMPIAR FORMULARIO
       setTitulo("");

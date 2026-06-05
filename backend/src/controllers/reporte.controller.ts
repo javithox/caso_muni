@@ -37,10 +37,7 @@ export const crearReporte = async (req: Request, res: Response) => {
         titulo,
         descripcion,
         latitud,
-        longitud,
-        severidad,
-        imagen,
-        usuarioId
+        longitud
       }
     });
 

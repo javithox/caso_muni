@@ -15,7 +15,4 @@ public class Reporte {
 
     private Double longitud;
 
-    private Integer nivelSeveridad;
-
-    private String estado;
 }
