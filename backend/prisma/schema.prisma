@@ -4,7 +4,9 @@ generator client {
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
+
 model Usuario {
   id        Int       @id @default(autoincrement())
   nombre    String
@@ -18,6 +20,8 @@ model Reporte {
   id          Int      @id @default(autoincrement())
   titulo      String
   descripcion String
-  latitud     Float
-  longitud    Float
+  createdAt   DateTime @default(now())
+
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
 }
