@@ -121,7 +121,7 @@ export default function Reportes() {
     setUbicacion(null);
 
     alert(
-      "🔥 Reporte enviado"
+      "🔥 Reporte guardado en la base de datos!"
     );
 
     window.location.href =

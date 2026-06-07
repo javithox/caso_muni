@@ -16,7 +16,7 @@ export default function Registrarse() {
     event.preventDefault();
     setMensaje("");
     try {
-      const response = await fetch("http://localhost:8081/api/auth/register", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -25,12 +25,16 @@ export default function Registrarse() {
       });
 
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.message || "Error en el registro");
+      if (response.ok) {
+        setMensaje("✅ Registro exitoso. Redirigiendo a iniciar sesión...");
+        setTimeout(() => {
+          window.location.href = '/iniciarsesion';
+        }, 1500);
+      } else {
+        setMensaje(`❌ ${data?.message || "Error en el registro"}`);
       }
-      setMensaje("Registro exitoso");
     } catch (error: any) {
-      setMensaje(error?.message || "Error en la solicitud");
+      setMensaje(`❌ ${error?.message || "Error en la solicitud"}`);
     }
   };
 
@@ -48,15 +52,35 @@ export default function Registrarse() {
           </nav>
           <h1 className="titulo-pagina">Registrarse</h1>
           <section className="form-container">
-            <form className="form-registro">
+            <form className="form-registro" onSubmit={handleSubmit}>
               <label>Nombre</label>
-              <input type="text" placeholder="Ingresa tu nombre" required />
+              <input 
+                type="text" 
+                placeholder="Ingresa tu nombre" 
+                required 
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+              />
 
               <label>Email</label>
-              <input type="email" placeholder="Ingresa tu email" required />
+              <input 
+                type="email" 
+                placeholder="Ingresa tu email" 
+                required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
               <label>Contraseña</label>
-              <input type="password" placeholder="Crea una contraseña" required />
+              <input 
+                type="password" 
+                placeholder="Crea una contraseña" 
+                required 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              {mensaje && <p style={{ color: mensaje.includes('✅') ? 'green' : 'red' }}>{mensaje}</p>}
 
               <button type="submit">Registrarse</button>
             </form>

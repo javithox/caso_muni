@@ -13,7 +13,7 @@ export default function IniciarSesion() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8081/api/auth/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -27,7 +27,13 @@ export default function IniciarSesion() {
       const data = await response.json();
       console.log(data);
 
-      if (!response.ok) {
+      if (response.ok) {
+        // Guardar token y datos del usuario
+        localStorage.setItem('token', data.token || 'token-' + Date.now());
+        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+        // Redirigir a reportes
+        window.location.href = '/reportes';
+      } else {
         setError(data?.message || "Error al iniciar sesión.");
       }
     } catch (error) {
@@ -56,13 +62,27 @@ export default function IniciarSesion() {
       {/* FORMULARIO */}
       <section className="form-container">
 
-        <form className="form-login">
+        <form className="form-login" onSubmit={handleSubmit}>
 
           <label>Email</label>
-          <input type="email" placeholder="Ingresa tu email" required />
+          <input 
+            type="email" 
+            placeholder="Ingresa tu email" 
+            required 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
           <label>Contraseña</label>
-          <input type="password" placeholder="Ingresa tu contraseña" required />
+          <input 
+            type="password" 
+            placeholder="Ingresa tu contraseña" 
+            required 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {error && <p style={{ color: 'red' }}>{error}</p>}
 
           <button type="submit">Ingresar</button>
 
