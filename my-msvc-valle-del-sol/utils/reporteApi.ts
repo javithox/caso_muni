@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { Reporte, GeolocationResponse, GeolocationRequest } from '../types/reporte';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
 
 class ReporteApiService {
   private apiClient: AxiosInstance;

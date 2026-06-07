@@ -1,11 +1,12 @@
 
+
 services:
   backend:
     build: .
     ports:
       - "8081:8081"
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/valledelsol
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/valle_del_sol
       JWT_SECRET: supersecret
     depends_on:
       - db
@@ -16,6 +17,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: valledelsol
+      POSTGRES_DB: valle_del_sol
     ports:
       - "5432:5432"

@@ -40,9 +40,9 @@ export default function OpenStreetMapComponent() {
       13
     );
 
-    // TILE LAYER
+    // TILE LAYER esto es para cambiar estilo de mapa
     L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
       {
         attribution:
           "&copy; OpenStreetMap contributors",
@@ -131,7 +131,11 @@ export default function OpenStreetMapComponent() {
 
         window.location.href =
           "/reportes";
+
+        
+        
       }}
+      
       disabled={!localStorage.getItem("ubicacionIncendio")}
 
       style={{

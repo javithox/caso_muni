@@ -10,6 +10,9 @@ export default function Reportes() {
 
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  console.log("API_URL:", API_URL);
 
   useEffect(() => {
   const ubicacionGuardada =
@@ -31,32 +34,108 @@ export default function Reportes() {
     useState("");
 
   const enviarReporte = async () => {
-    const reporte = {
-      titulo,
-      descripcion,
-      ubicacion,
-    };
 
+  if (!ubicacion) {
 
-    console.log(reporte);
-
-    localStorage.setItem(
-      "reporteIncendio",
-      JSON.stringify(reporte)
+    alert(
+      "Selecciona una ubicación"
     );
-     localStorage.removeItem(
-    "ubicacionIncendio"
+
+    return;
+  }
+
+  const reporte = {
+
+    titulo,
+
+    descripcion,
+
+    latitud: ubicacion.lat,
+
+    longitud: ubicacion.lng,
+
+    ubicacionId:
+      crypto.randomUUID(),
+
+    direccion:
+      "Ubicación seleccionada",
+
+    placeMapsId: "",
+
+    estado: "PENDIENTE",
+
+    reportadoPor:
+      "Usuario",
+
+    contactoEmergencia: "",
+
+    nivelSeveridad: 3,
+
+  };
+
+  try {
+
+    const response =
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/reportes`,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify(
+            reporte
+          ),
+        }
+      );
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Error enviando reporte"
+      );
+    }
+
+    const data =
+      await response.json();
+
+    console.log(
+      "Reporte guardado:",
+      data
     );
-      // LIMPIAR FORMULARIO
-      setTitulo("");
-      setDescripcion("");
-      setUbicacion(null);
 
+    // LIMPIAR UBICACIÓN
+    localStorage.removeItem(
+      "ubicacionIncendio"
+    );
 
-    alert("Reporte enviado");
-    window.location.href ="/geolocalizacion";
-  
-    };
+    // LIMPIAR FORMULARIO
+    setTitulo("");
+
+    setDescripcion("");
+
+    setUbicacion(null);
+
+    alert(
+      "🔥 Reporte enviado"
+    );
+
+    window.location.href =
+      "/geolocalizacion";
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "Error conectando backend"
+    );
+  }
+};
 
   return (
     <main>
