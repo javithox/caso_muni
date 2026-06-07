@@ -3,11 +3,39 @@
 
 import Link from "next/link";
 import "../estilos/estilo-registrarse.css";
+import { useState, FormEvent } from "react";
 
 
 export default function Registrarse() {
-    return(
-        <main>
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mensaje, setMensaje] = useState("");
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setMensaje("");
+    try {
+      const response = await fetch("http://localhost:8081/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ nombre, email, password })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.message || "Error en el registro");
+      }
+      setMensaje("Registro exitoso");
+    } catch (error: any) {
+      setMensaje(error?.message || "Error en la solicitud");
+    }
+  };
+
+  return (
+    <main>
           
           <nav style={{ fontSize: "8px"}}>
             <ul className="lista-de-botones">

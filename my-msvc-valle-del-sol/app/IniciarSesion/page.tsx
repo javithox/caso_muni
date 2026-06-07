@@ -1,8 +1,41 @@
 "use client";
 import Link from "next/link";
 import "../estilos/estilo-iniciar-sesion.css";
+import { useState, FormEvent } from "react";
 
 export default function IniciarSesion() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:8081/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          password
+        })
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (!response.ok) {
+        setError(data?.message || "Error al iniciar sesión.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("No se pudo conectar con el servidor.");
+    }
+  };
+
   return (
     <main>
 
