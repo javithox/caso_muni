@@ -42,7 +42,7 @@ export default function OpenStreetMapComponent() {
 
     // TILE LAYER esto es para cambiar estilo de mapa
     L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+      "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
       {
         attribution:
           "&copy; OpenStreetMap contributors",
