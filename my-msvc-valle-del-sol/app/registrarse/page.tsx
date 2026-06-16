@@ -22,7 +22,7 @@ export default function Registrarse() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ nombreCompleto, email, password })
+        body: JSON.stringify({ nombreCompleto, nombre, email, password })
       });
 
       const data = await response.json();
@@ -38,11 +38,6 @@ export default function Registrarse() {
       setMensaje(`❌ ${error?.message || "Error en la solicitud"}`);
     }
   };
-  console.log({
-  nombre,
-  email,
-  password
-});
 
   return (
     <main>
@@ -67,6 +62,14 @@ export default function Registrarse() {
                 required 
                 value={nombreCompleto}
                 onChange={(e) => setNombreCompleto(e.target.value)}
+              />
+              <label>Nombre de Usuario</label>
+              <input 
+                type="text" 
+                placeholder="Ingresa tu nombre de usuario" 
+                required 
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
               />
 
               <label>Email</label>
