@@ -38,6 +38,11 @@ export default function Registrarse() {
       setMensaje(`❌ ${error?.message || "Error en la solicitud"}`);
     }
   };
+  console.log({
+  nombre,
+  email,
+  password
+});
 
   return (
     <main>

@@ -20,28 +20,50 @@ public class UsuarioService {
      * Registrar nuevo usuario
      */
     public AuthResponseDTO registrar(RegisterDTO dto) {
+        // Validar campos obligatorios
+        if (dto.getNombre() == null || dto.getNombre().trim().isEmpty()) {
+            throw new RuntimeException("El nombre de usuario es requerido");
+        }
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            throw new RuntimeException("El email es requerido");
+        }
+        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            throw new RuntimeException("La contraseña es requerida");
+        }
+        if (dto.getPassword().length() < 6) {
+            throw new RuntimeException("La contraseña debe tener al menos 6 caracteres");
+        }
+        
         // Validar que el usuario y email no existan
-        if (usuarioRepository.existsByNombre(dto.getNombre())) {
+        if (usuarioRepository.existsByNombre(dto.getNombre().trim())) {
             throw new RuntimeException("El nombre de usuario ya está registrado");
         }
         
-        if (usuarioRepository.existsByEmail(dto.getEmail())) {
+        if (usuarioRepository.existsByEmail(dto.getEmail().trim())) {
             throw new RuntimeException("El email ya está registrado");
         }
         
         // Crear nuevo usuario
+        String nombreCompleto = (dto.getNombreCompleto() != null && !dto.getNombreCompleto().trim().isEmpty()) 
+                ? dto.getNombreCompleto() 
+                : dto.getNombre();
+        
         UsuarioEntity usuario = UsuarioEntity.builder()
-                .nombre(dto.getNombre())
-                .email(dto.getEmail())
+                .nombre(dto.getNombre().trim())
+                .email(dto.getEmail().trim().toLowerCase())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .nombreCompleto(dto.getNombreCompleto() != null ? dto.getNombreCompleto() : dto.getNombre())
-                .rol("CIUDADANO")
+                .nombreCompleto(nombreCompleto)
+                .rol(UsuarioEntity.RolUsuario.CIUDADANO)
                 .activo(true)
                 .verificado(false)
                 .fechaCreacion(LocalDateTime.now())
                 .build();
         
-        usuario = usuarioRepository.save(usuario);
+        try {
+            usuario = usuarioRepository.save(usuario);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar el usuario en la base de datos: " + e.getMessage());
+        }
         
         return AuthResponseDTO.builder()
                 .token("token-" + usuario.getId())

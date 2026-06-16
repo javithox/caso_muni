@@ -42,7 +42,10 @@ public class UsuarioEntity {
     private Boolean activo = true;
     
     @Column(nullable = false)
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
+    private Boolean verificado = false;
+    
+    @Column(nullable = false)
+    private LocalDateTime fechaCreacion;
     
     private LocalDateTime fechaActualizacion;
     
@@ -51,9 +54,28 @@ public class UsuarioEntity {
     // Campos adicionales
     private String foto; // URL de foto de perfil
     
-    private Boolean verificado = false;
+    @PrePersist
+    protected void onCreate() {
+        if (this.fechaCreacion == null) {
+            this.fechaCreacion = LocalDateTime.now();
+        }
+        if (this.activo == null) {
+            this.activo = true;
+        }
+        if (this.verificado == null) {
+            this.verificado = false;
+        }
+        if (this.rol == null) {
+            this.rol = RolUsuario.CIUDADANO;
+        }
+    }
     
-    enum RolUsuario {
+    @PreUpdate
+    protected void onUpdate() {
+        this.fechaActualizacion = LocalDateTime.now();
+    }
+    
+    public enum RolUsuario {
         CIUDADANO,
         BOMBERO,
         ADMINISTRADOR

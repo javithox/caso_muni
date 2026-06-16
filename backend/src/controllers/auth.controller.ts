@@ -9,7 +9,7 @@ type Response = { status: (code: number) => Response; json: (body: any) => Respo
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { nombre, email, password } = req.body;
 
     const usuario = await prisma.usuario.findUnique({
       where: { email }
