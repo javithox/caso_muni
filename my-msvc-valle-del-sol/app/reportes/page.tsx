@@ -3,8 +3,51 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useEffect } from "react";
+import dynamic from "next/dynamic";
+import "../estilos/estilo-geolocalizacion.css";
+
+// Simple type for report objects. Adjust fields as needed.
+type Reporte = Record<string, any>;
+
+const OpenStreetMapComponent = dynamic(
+  () => import("@/app/components/OpenStreetMapComponent"),
+  { ssr: false, loading: () => <div>Cargando mapa...</div> }
+);
+
+const OneStreetMap = dynamic(
+  () => import("@/app/components/MapaReportes"),
+  { ssr: false, loading: () => <div>Cargando mapa de reportes...</div> }
+);
 
 export default function Reportes() {
+  const [reportes, setReportes] = useState<Reporte[]>([]);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState("");
+    useEffect(() => {
+      cargarReportes();
+    }, []);
+  
+    const cargarReportes = async () => {
+      try {
+        setCargando(true);
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
+        const response = await fetch(`${API_URL}/api/reportes`);
+  
+        if (!response.ok) {
+          throw new Error(`Error al cargar reportes: ${response.status}`);
+        }
+  
+        const datos = await response.json();
+        setReportes(datos);
+        setError("");
+      } catch (err: any) {
+        console.error("Error:", err);
+        setError(`No se pudieron cargar los reportes: ${err.message}`);
+      } finally {
+        setCargando(false);
+      }
+    };
+
   const [ubicacion, setUbicacion] =
   useState<any>(null);
 
@@ -139,6 +182,13 @@ export default function Reportes() {
 
   return (
     <main>
+      {/* SECCIÓN 1: Seleccionar Ubicación */}
+      <div style={{ marginBottom: "40px" }}>
+        <h2 style={{ marginTop: "20px", marginBottom: "10px", color: "#334155" ,backgroundColor:'#fcfcfc', padding:'10px'}}>
+          📍 Selecciona la ubicación del incendio
+        </h2>
+        <OpenStreetMapComponent />
+      </div>
       <h1 style={{bottom:'100px'}}>🔥 Reportar Incendio</h1>
 
       <nav style={{ fontSize: "8px"}}>
@@ -241,3 +291,7 @@ export default function Reportes() {
     </main>
   );
 }
+function setCargando(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+

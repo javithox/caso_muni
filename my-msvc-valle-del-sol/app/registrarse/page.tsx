@@ -8,6 +8,7 @@ import { useState, FormEvent } from "react";
 
 export default function Registrarse() {
   const [nombre, setNombre] = useState("");
+  const [nombreCompleto, setNombreCompleto] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mensaje, setMensaje] = useState("");
@@ -21,7 +22,7 @@ export default function Registrarse() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ nombre, email, password })
+        body: JSON.stringify({ nombre, nombreCompleto, email, password })
       });
 
       const data = await response.json();
@@ -31,7 +32,7 @@ export default function Registrarse() {
           window.location.href = '/iniciarsesion';
         }, 1500);
       } else {
-        setMensaje(`❌ ${data?.message || "Error en el registro"}`);
+        setMensaje(`❌ ${data?.mensaje || "Error en el registro"}`);
       }
     } catch (error: any) {
       setMensaje(`❌ ${error?.message || "Error en la solicitud"}`);
@@ -53,13 +54,22 @@ export default function Registrarse() {
           <h1 className="titulo-pagina">Registrarse</h1>
           <section className="form-container">
             <form className="form-registro" onSubmit={handleSubmit}>
-              <label>Nombre</label>
+              <label>Nombre de Usuario</label>
               <input 
                 type="text" 
-                placeholder="Ingresa tu nombre" 
+                placeholder="Ingresa tu nombre de usuario" 
                 required 
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
+              />
+
+              <label>Nombre Completo</label>
+              <input 
+                type="text" 
+                placeholder="Ingresa tu nombre completo" 
+                required 
+                value={nombreCompleto}
+                onChange={(e) => setNombreCompleto(e.target.value)}
               />
 
               <label>Email</label>

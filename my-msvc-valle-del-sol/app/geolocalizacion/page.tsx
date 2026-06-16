@@ -4,12 +4,6 @@ import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import "../estilos/estilo-geolocalizacion.css";
 
-const OpenStreetMapComponent = dynamic(
-  () => import("@/app/components/OpenStreetMapComponent"),
-  {
-    ssr: false,
-  }
-);
 
 const MapaReportes = dynamic(
   () => import("@/app/components/MapaReportes"),
@@ -72,18 +66,6 @@ export default function Home() {
           <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
         </ul>
       </nav>
-
-      {/* SECCIÓN 1: Seleccionar Ubicación */}
-      <div style={{ marginBottom: "40px" }}>
-        <h2 style={{ marginTop: "20px", marginBottom: "10px", color: "#334155" }}>
-          📍 Selecciona la ubicación del incendio
-        </h2>
-        <p style={{ color: "#666", marginBottom: "15px" }}>
-          Haz clic en el mapa para marcar la ubicación del incendio, luego ve a crear el reporte.
-        </p>
-        <OpenStreetMapComponent />
-      </div>
-
       {/* SEPARADOR */}
       <div style={{ borderTop: "3px solid #334155", margin: "40px 0", padding: "20px 0" }}>
         <h2 style={{ textAlign: "center", color: "#334155" }}>📊 REPORTES GUARDADOS EN LA BASE DE DATOS</h2>

@@ -30,9 +30,9 @@ export default function IniciarSesion() {
       if (response.ok) {
         // Guardar token y datos del usuario
         localStorage.setItem('token', data.token || 'token-' + Date.now());
-        localStorage.setItem('usuario', JSON.stringify(data.usuario));
-        // Redirigir a reportes
-        window.location.href = '/reportes';
+        localStorage.setItem('usuario', JSON.stringify(data.usuario || { email, nombre: email.split('@')[0] }));
+        // Redirigir a perfil
+        window.location.href = '/perfil';
       } else {
         setError(data?.message || "Error al iniciar sesión.");
       }

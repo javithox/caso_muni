@@ -3,12 +3,27 @@ import Registrarse from "./registrarse/page";
 import IniciarSesion from "./iniciarsesion/page";
 import Reportes from "./reportes/page";
 import Image from "next/image";
-
+import { useEffect, useState } from "react";
 
 import Link from "next/link";
 import "../app/estilos/estilo-pagina.css";
 
 export default function Home() {
+  const [usuario, setUsuario] = useState<any>(null);
+
+  useEffect(() => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    if (usuarioGuardado) {
+      setUsuario(JSON.parse(usuarioGuardado));
+    }
+  }, []);
+
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    setUsuario(null);
+  };
+
   return (
     <main>
 
@@ -21,8 +36,24 @@ export default function Home() {
           <li><Link href="/" className="btn-nav">Home</Link></li>
           <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>
           <li><Link href="/geolocalizacion" className="btn-nav">Geolocalización</Link></li>
-          <li><Link href="/iniciarsesion" className="btn-nav">Iniciar Sesión</Link></li>
-          <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
+          {usuario ? (
+            <>
+              <li><Link href="/perfil" className="btn-nav">👤 Mi Perfil</Link></li>
+              <li><button onClick={handleCerrarSesion} style={{
+                padding: "10px 20px",
+                backgroundColor: "#dc2626",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer"
+              }}>Cerrar Sesión</button></li>
+            </>
+          ) : (
+            <>
+              <li><Link href="/iniciarsesion" className="btn-nav">Iniciar Sesión</Link></li>
+              <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
+            </>
+          )}
         </ul>
       </nav>
 
