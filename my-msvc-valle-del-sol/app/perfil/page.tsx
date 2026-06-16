@@ -6,9 +6,8 @@ import "../estilos/estilo-pagina.css";
 
 interface Usuario {
   id: number;
-  nombre: string;
-  email: string;
   nombreCompleto: string;
+  email: string;
   telefono?: string;
   direccion?: string;
   ciudad?: string;

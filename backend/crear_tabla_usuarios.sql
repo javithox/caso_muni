@@ -10,20 +10,9 @@ CREATE DATABASE IF NOT EXISTS valle_del_sol;
 -- Crear tabla de usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
     id SERIAL PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL UNIQUE,
+    nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    nombre_completo VARCHAR(100) NOT NULL,
-    telefono VARCHAR(20),
-    direccion VARCHAR(255),
-    ciudad VARCHAR(50),
-    rol VARCHAR(20) NOT NULL DEFAULT 'CIUDADANO',
-    activo BOOLEAN NOT NULL DEFAULT true,
-    fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    fecha_actualizacion TIMESTAMP,
-    ultimo_ingreso TIMESTAMP,
-    foto VARCHAR(255),
-    verificado BOOLEAN NOT NULL DEFAULT false
+    password VARCHAR(255) NOT NULL
 );
 
 -- Crear índices para optimizar búsquedas

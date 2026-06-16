@@ -22,7 +22,7 @@ export default function Registrarse() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ nombre, nombreCompleto, email, password })
+        body: JSON.stringify({ nombreCompleto, email, password })
       });
 
       const data = await response.json();
@@ -54,15 +54,7 @@ export default function Registrarse() {
           <h1 className="titulo-pagina">Registrarse</h1>
           <section className="form-container">
             <form className="form-registro" onSubmit={handleSubmit}>
-              <label>Nombre de Usuario</label>
-              <input 
-                type="text" 
-                placeholder="Ingresa tu nombre de usuario" 
-                required 
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-              />
-
+              
               <label>Nombre Completo</label>
               <input 
                 type="text" 
