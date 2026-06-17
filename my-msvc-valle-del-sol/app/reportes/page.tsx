@@ -53,9 +53,7 @@ export default function Reportes() {
 
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-  console.log("API_URL:", API_URL);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
   useEffect(() => {
   const ubicacionGuardada =
@@ -120,7 +118,7 @@ export default function Reportes() {
 
     const response =
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/reportes`,
+        `${API_URL}/api/reportes`,
         {
 
           method: "POST",
@@ -291,7 +289,3 @@ export default function Reportes() {
     </main>
   );
 }
-function setCargando(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
-

@@ -6,16 +6,19 @@ export const listarReportes = async (
   res: Response
 ) => {
   try {
-    const reportes =
-      await prisma.reporte.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
+    const reportes = await prisma.reporte.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
     res.json(reportes);
-  } catch (error) {
-    res.status(500).json(error);
+  } catch (error: any) {
+    console.error("ERROR PRISMA:", error);
+    res.status(500).json({
+      error: "Error al obtener reportes",
+      message: error?.message,
+    });
   }
 };
 

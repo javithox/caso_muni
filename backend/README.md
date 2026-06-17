@@ -96,8 +96,8 @@ prisma/
 
 ```
 PORT=8081
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/valle_del_sol"
-JWT_SECRET=mi_clave_super_secreta
+DATABASE_URL="postgresql://postgres:postgres@localhost:5434/valle_del_sol"
+JWT_SECRET=supersecret
 JWT_EXPIRES_IN=7d
 NODE_ENV=development
 ```
@@ -106,9 +106,17 @@ NODE_ENV=development
 
 ## 🗄️ Requisitos Previos
 
-✅ PostgreSQL 12+  
+✅ Docker Desktop (PostgreSQL en puerto **5434** para evitar conflicto con PostgreSQL local)  
 ✅ Node.js 18+  
 ✅ npm 8+
+
+### Base de datos con Docker
+
+```bash
+docker compose up -d db
+npx prisma migrate deploy
+npm run dev
+```
 
 ---
 
