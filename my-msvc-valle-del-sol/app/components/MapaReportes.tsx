@@ -32,7 +32,7 @@ export default function MapaReportes({ reportes }: MapaReportesProps) {
     map.current = L.map(mapContainer.current).setView([20.5, -102.3], 6);
 
     // Agregar capas de tiles
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19,
     }).addTo(map.current);
