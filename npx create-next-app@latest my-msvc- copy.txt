@@ -1,0 +1,72 @@
+npx create-next-app@latest my-msvc-project
+npm install -g
+npm install -g npm@11.12.1
+
+npm install lucide-react
+
+npm install react-leaflet leaflet
+npm install --save-dev @types/leaflet
+
+npm run dev
+
+
+comando para vercel
+
+cd my-msvc-valle-del-sol
+npx tsc --noEmit
+npm run dev
+
+npm install @vercel/blob
+
+npx plugins add vercel/vercel-plugi
+
+instalar dependencias jest v29
+
+npm install -D jest@29.7.0 ts-jest@29.4.11 @types/jest@29.5.14
+
+
+verificar versiones
+
+npx jest --version
+
+comando para generar configuracion desde cero
+
+npx ts-jest config:init
+
+contenido a remplazar en la configuracion
+/** @type {import('ts-jest').JestConfigWithTsJest} */
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "node",
+  roots: ["<rootDir>/src"],
+  testMatch: ["**/*.test.ts"],
+  moduleFileExtensions: ["ts", "js", "json"],
+  transform: {
+    "^.+\\.ts$": "ts-jest",
+  },
+  clearMocks: true,
+};
+
+eliminar nodes y package-lock
+
+Remove-Item -Recurse -Force node_modules
+Remove-Item package-lock.json
+
+reinstalar
+
+npm install
+
+comprobar versiones de pruebas
+
+npm ls jest
+npm ls ts-jest
+
+ejecutar pruebas
+
+npm test
+
+npm run test
+
+npm run test:integration
+
+npm run test:coverage
