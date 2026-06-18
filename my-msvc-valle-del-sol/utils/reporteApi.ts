@@ -22,7 +22,7 @@ class ReporteApiService {
    */
   async crearReporte(reporte: Reporte): Promise<Reporte> {
     try {
-      const response = await this.apiClient.post('/reportes', reporte);
+      const response = await this.apiClient.post('/api/reportes', reporte);
       return response.data;
     } catch (error) {
       console.error('Error al crear reporte:', error);
@@ -35,7 +35,7 @@ class ReporteApiService {
    */
   async obtenerReporte(id: number): Promise<Reporte> {
     try {
-      const response = await this.apiClient.get(`/reportes/${id}`);
+      const response = await this.apiClient.get(`/api/reportes/${id}`);
       return response.data;
     } catch (error) {
       console.error('Error al obtener reporte:', error);
@@ -48,7 +48,7 @@ class ReporteApiService {
    */
   async listarReportes(): Promise<Reporte[]> {
     try {
-      const response = await this.apiClient.get('/reportes');
+      const response = await this.apiClient.get('/api/reportes');
       return response.data;
     } catch (error) {
       console.error('Error al listar reportes:', error);
@@ -61,7 +61,7 @@ class ReporteApiService {
    */
   async actualizarReporte(id: number, reporte: Partial<Reporte>): Promise<Reporte> {
     try {
-      const response = await this.apiClient.put(`/reportes/${id}`, reporte);
+      const response = await this.apiClient.put(`/api/reportes/${id}`, reporte);
       return response.data;
     } catch (error) {
       console.error('Error al actualizar reporte:', error);
@@ -74,7 +74,7 @@ class ReporteApiService {
    */
   async eliminarReporte(id: number): Promise<void> {
     try {
-      await this.apiClient.delete(`/reportes/${id}`);
+      await this.apiClient.delete(`/api/reportes/${id}`);
     } catch (error) {
       console.error('Error al eliminar reporte:', error);
       throw error;
@@ -86,7 +86,7 @@ class ReporteApiService {
    */
   async obtenerReportesPorEstado(estado: string): Promise<Reporte[]> {
     try {
-      const response = await this.apiClient.get(`/reportes/estado/${estado}`);
+      const response = await this.apiClient.get(`/api/reportes/estado/${estado}`);
       return response.data;
     } catch (error) {
       console.error('Error al obtener reportes por estado:', error);
@@ -99,7 +99,7 @@ class ReporteApiService {
    */
   async obtenerReportesPorSeveridad(severidad: number): Promise<Reporte[]> {
     try {
-      const response = await this.apiClient.get(`/reportes/severidad/${severidad}`);
+      const response = await this.apiClient.get(`/api/reportes/severidad/${severidad}`);
       return response.data;
     } catch (error) {
       console.error('Error al obtener reportes por severidad:', error);
@@ -114,7 +114,7 @@ class ReporteApiService {
    */
   async geocodeAddress(direccion: string): Promise<GeolocationResponse> {
     try {
-      const response = await this.apiClient.post('/reportes/maps/geocode', {
+      const response = await this.apiClient.post('/api/reportes/maps/geocode', {
         direccion,
       });
       return response.data;
@@ -129,7 +129,7 @@ class ReporteApiService {
    */
   async reverseGeocode(latitud: number, longitud: number): Promise<GeolocationResponse> {
     try {
-      const response = await this.apiClient.post('/reportes/maps/reverse-geocode', {
+      const response = await this.apiClient.post('/api/reportes/maps/reverse-geocode', {
         latitud,
         longitud,
       });
@@ -145,7 +145,7 @@ class ReporteApiService {
    */
   async validateAddress(address: string): Promise<boolean> {
     try {
-      const response = await this.apiClient.get('/reportes/maps/validate-address', {
+      const response = await this.apiClient.get('/api/reportes/maps/validate-address', {
         params: { address },
       });
       return response.data.valid;
@@ -164,7 +164,7 @@ class ReporteApiService {
     distancia: number = 5
   ): Promise<Reporte[]> {
     try {
-      const response = await this.apiClient.get('/reportes/nearby', {
+      const response = await this.apiClient.get('/api/reportes/nearby', {
         params: { latitud, longitud, distancia },
       });
       return response.data;
