@@ -52,6 +52,27 @@ eliminar nodes y package-lock
 Remove-Item -Recurse -Force node_modules
 Remove-Item package-lock.json
 
+comandos docker 
+
+# Construir la imagen
+docker build -t valle-del-sol-frontend:latest .
+
+# Ejecutar el contenedor
+docker run -d -p 3000:3000 --name valle-frontend valle-del-sol-frontend:latest
+
+base de datos
+
+# Construir la imagen
+docker build -t valle-del-sol-backend:latest .
+
+# Ejecutar el contenedor
+
+docker run -d -p 8081:8081 --name valle-backend valle-del-sol-backend:latest
+docker run --name valle-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=valle_del_sol -p 5432:5432 -d postgres:16
+Script .SQL
+docker exec -i valle-postgres psql -U postgres -d valle_del_sol < .\db\crear_tabla_usuarios.sql
+docker exec -i valle-postgres psql -U postgres -d valle_del_sol < .\db\base-de-datos.sql
+
 reinstalar
 
 npm install
