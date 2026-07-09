@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import "../estilos/estilo-pagina.css";
+import { useSession } from "@/app/hooks/useSession";
+import { useRouter } from "next/navigation";
 
 interface Usuario {
-  id: number;
+  id?: number;
   nombreCompleto: string;
   email: string;
   telefono?: string;
@@ -19,56 +21,54 @@ interface Usuario {
 }
 
 export default function Perfil() {
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const { usuario, isLoading, actualizarUsuario } = useSession();
+  const router = useRouter();
+  const [datosUsuario, setDatosUsuario] = useState<Usuario | null>(null);
   const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState("");
   const [editando, setEditando] = useState(false);
   const [datos, setDatos] = useState<Partial<Usuario>>({});
   const [passwordActual, setPasswordActual] = useState("");
   const [passwordNueva, setPasswordNueva] = useState("");
-  const [passwordConfirmar] = useState("");
+  const [passwordConfirmar, setPasswordConfirmar] = useState("");
   const [mensaje, setMensaje] = useState("");
 
   useEffect(() => {
-    cargarPerfil();
-  }, []);
+    if (!isLoading && !usuario) {
+      router.push("/iniciarsesion");
+    } else if (!isLoading && usuario) {
+      cargarPerfil();
+    }
+  }, [usuario, isLoading, router]);
 
   const cargarPerfil = async () => {
     try {
-      const usuarioGuardado = localStorage.getItem("usuario");
-      if (!usuarioGuardado) {
-        setError("No hay sesión activa. Por favor inicia sesión.");
+      if (!usuario?.id) {
+        setDatosUsuario(usuario as Usuario);
+        setDatos(usuario || {});
         setCargando(false);
         return;
       }
 
-      const usuarioLocal = JSON.parse(usuarioGuardado);
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
       
-      const response = await fetch(`${API_URL}/api/auth/perfil/${usuarioLocal.id}`, {
+      const response = await fetch(`${API_URL}/api/auth/perfil/${usuario.id}`, {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
       });
 
       if (response.ok) {
-        const datos = await response.json();
-        setUsuario(datos);
-        setDatos(datos);
+        const datosResponse = await response.json();
+        setDatosUsuario(datosResponse);
+        setDatos(datosResponse);
       } else {
-        setUsuario(usuarioLocal);
-        setDatos(usuarioLocal);
+        setDatosUsuario(usuario as Usuario);
+        setDatos(usuario || {});
       }
     } catch (err) {
       console.error("Error:", err);
-      const usuarioGuardado = localStorage.getItem("usuario");
-      if (usuarioGuardado) {
-        const usuarioLocal = JSON.parse(usuarioGuardado);
-        setUsuario(usuarioLocal);
-        setDatos(usuarioLocal);
-      } else {
-        setError("Error al cargar el perfil");
-      }
+      setDatosUsuario(usuario as Usuario);
+      setDatos(usuario || {});
     } finally {
       setCargando(false);
     }
@@ -79,11 +79,15 @@ export default function Perfil() {
     setMensaje("");
 
     try {
-      if (!usuario) return;
+      if (!datosUsuario?.id && !usuario?.id) {
+        setMensaje("❌ No se puede actualizar sin ID de usuario");
+        return;
+      }
 
+      const userId = datosUsuario?.id || usuario?.id;
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
       
-      const response = await fetch(`${API_URL}/api/auth/perfil/${usuario.id}`, {
+      const response = await fetch(`${API_URL}/api/auth/perfil/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -94,8 +98,8 @@ export default function Perfil() {
 
       if (response.ok) {
         const usuarioActualizado = await response.json();
-        setUsuario(usuarioActualizado);
-        localStorage.setItem("usuario", JSON.stringify(usuarioActualizado));
+        setDatosUsuario(usuarioActualizado);
+        actualizarUsuario(usuarioActualizado);
         setMensaje("✅ Perfil actualizado exitosamente");
         setEditando(false);
       } else {
@@ -116,11 +120,12 @@ export default function Perfil() {
     }
 
     try {
-      if (!usuario) return;
+      if (!datosUsuario?.id && !usuario?.id) return;
 
+      const userId = datosUsuario?.id || usuario?.id;
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
       
-      const response = await fetch(`${API_URL}/api/auth/cambiar-contrasena/${usuario.id}`, {
+      const response = await fetch(`${API_URL}/api/auth/cambiar-contrasena/${userId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,6 +141,7 @@ export default function Perfil() {
         setMensaje("✅ Contraseña actualizada exitosamente");
         setPasswordActual("");
         setPasswordNueva("");
+        setPasswordConfirmar("");
       } else {
         setMensaje("❌ Error al cambiar la contraseña");
       }
@@ -144,13 +150,7 @@ export default function Perfil() {
     }
   };
 
-  const handleCerrarSesion = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("usuario");
-    window.location.href = "/";
-  };
-
-  if (cargando) {
+  if (isLoading || cargando) {
     return (
       <main style={{ padding: "20px" }}>
         <h1>Cargando perfil...</h1>
@@ -158,11 +158,11 @@ export default function Perfil() {
     );
   }
 
-  if (error && !usuario) {
+  if (!datosUsuario && !usuario) {
     return (
       <main style={{ padding: "20px" }}>
         <h1>Error</h1>
-        <p>{error}</p>
+        <p>No hay sesión activa. Por favor inicia sesión.</p>
         <Link href="/iniciarsesion" className="btn-primary">
           Ir a Iniciar Sesión
         </Link>
@@ -170,43 +170,10 @@ export default function Perfil() {
     );
   }
 
+  const usuarioActual = datosUsuario || usuario;
+
   return (
     <main style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-      <nav style={{ fontSize: "8px", marginBottom: "20px" }}>
-        <ul className="lista-de-botones">
-          <li>
-            <Link href="/" className="btn-nav">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="/reportes" className="btn-nav">
-              Reportes
-            </Link>
-          </li>
-          <li>
-            <Link href="/geolocalizacion" className="btn-nav">
-              Geolocalización
-            </Link>
-          </li>
-          <li>
-            <button
-              onClick={handleCerrarSesion}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#dc2626",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer"
-              }}
-            >
-              Cerrar Sesión
-            </button>
-          </li>
-        </ul>
-      </nav>
-
       <h1 style={{ marginBottom: "30px", color: "#334155" }}>👤 Mi Perfil</h1>
 
       {mensaje && (
@@ -223,7 +190,7 @@ export default function Perfil() {
         </div>
       )}
 
-      {usuario && (
+      {usuarioActual && (
         <>
           {/* INFORMACIÓN GENERAL */}
           <div
@@ -241,24 +208,6 @@ export default function Perfil() {
 
             {editando ? (
               <form onSubmit={handleActualizarPerfil}>
-                <div style={{ marginBottom: "15px" }}>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
-                    Nombre de Usuario:
-                  </label>
-                  <input
-                    type="text"
-                    value={datos.nombre || ""}
-                    disabled
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      backgroundColor: "#e2e8f0",
-                      border: "1px solid #cbd5e1",
-                      borderRadius: "4px"
-                    }}
-                  />
-                </div>
-
                 <div style={{ marginBottom: "15px" }}>
                   <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>
                     Email:
@@ -363,7 +312,7 @@ export default function Perfil() {
                     type="button"
                     onClick={() => {
                       setEditando(false);
-                      setDatos(usuario);
+                      setDatos(datosUsuario || usuario || {});
                     }}
                     style={{
                       padding: "10px 20px",
@@ -381,28 +330,25 @@ export default function Perfil() {
             ) : (
               <>
                 <div style={{ marginBottom: "10px" }}>
-                  <strong>Nombre de Usuario:</strong> {usuario.nombre}
+                  <strong>Email:</strong> {usuarioActual.email}
                 </div>
                 <div style={{ marginBottom: "10px" }}>
-                  <strong>Email:</strong> {usuario.email}
+                  <strong>Nombre Completo:</strong> {usuarioActual.nombreCompleto || "No especificado"}
                 </div>
                 <div style={{ marginBottom: "10px" }}>
-                  <strong>Nombre Completo:</strong> {usuario.nombreCompleto || "No especificado"}
+                  <strong>Teléfono:</strong> {usuarioActual.telefono || "No especificado"}
                 </div>
                 <div style={{ marginBottom: "10px" }}>
-                  <strong>Teléfono:</strong> {usuario.telefono || "No especificado"}
+                  <strong>Dirección:</strong> {usuarioActual.direccion || "No especificado"}
                 </div>
                 <div style={{ marginBottom: "10px" }}>
-                  <strong>Dirección:</strong> {usuario.direccion || "No especificado"}
+                  <strong>Ciudad:</strong> {usuarioActual.ciudad || "No especificado"}
                 </div>
                 <div style={{ marginBottom: "10px" }}>
-                  <strong>Ciudad:</strong> {usuario.ciudad || "No especificado"}
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <strong>Rol:</strong> {usuario.rol}
+                  <strong>Rol:</strong> {usuarioActual.rol}
                 </div>
                 <div style={{ marginBottom: "20px" }}>
-                  <strong>Estado:</strong> {usuario.activo ? "✅ Activo" : "❌ Inactivo"}
+                  <strong>Estado:</strong> {usuarioActual.activo ? "✅ Activo" : "❌ Inactivo"}
                 </div>
 
                 <button
@@ -500,7 +446,7 @@ export default function Perfil() {
                   cursor: "pointer"
                 }}
               >
-                🔄 Cambiar Contraseña
+                🔐 Cambiar Contraseña
               </button>
             </form>
           </div>
@@ -517,16 +463,16 @@ export default function Perfil() {
             <h2 style={{ color: "#334155", marginBottom: "15px" }}>ℹ️ Información Adicional</h2>
             <div style={{ marginBottom: "10px" }}>
               <strong>Cuenta creada:</strong>{" "}
-              {new Date(usuario.fechaCreacion).toLocaleDateString("es-ES")}
+              {usuarioActual.fechaCreacion ? new Date(usuarioActual.fechaCreacion).toLocaleDateString("es-ES") : "N/A"}
             </div>
             <div style={{ marginBottom: "10px" }}>
               <strong>Último ingreso:</strong>{" "}
-              {usuario.ultimoIngreso
-                ? new Date(usuario.ultimoIngreso).toLocaleString("es-ES")
+              {usuarioActual.ultimoIngreso
+                ? new Date(usuarioActual.ultimoIngreso).toLocaleString("es-ES")
                 : "Primera vez"}
             </div>
             <div style={{ marginBottom: "10px" }}>
-              <strong>Verificado:</strong> {usuario.verificado ? "✅ Sí" : "❌ No"}
+              <strong>Verificado:</strong> {usuarioActual.verificado ? "✅ Sí" : "❌ No"}
             </div>
           </div>
         </>

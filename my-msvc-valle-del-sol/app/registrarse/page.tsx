@@ -4,6 +4,8 @@
 import Link from "next/link";
 import "../estilos/estilo-registrarse.css";
 import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "@/app/hooks/useSession";
 
 
 export default function Registrarse() {
@@ -12,6 +14,8 @@ export default function Registrarse() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const { login } = useSession();
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,9 +31,13 @@ export default function Registrarse() {
 
       const data = await response.json();
       if (response.ok) {
-        setMensaje("✅ Registro exitoso. Redirigiendo a iniciar sesión...");
+        // Guardar sesión automáticamente después del registro
+        const token = data.token || 'token-' + Date.now();
+        const usuario = data.usuario || { email, nombre: nombreCompleto };
+        login(usuario, token);
+        setMensaje("✅ Registro exitoso. Redirigiendo a tu perfil...");
         setTimeout(() => {
-          window.location.href = '/iniciarsesion';
+          router.push('/perfil');
         }, 1500);
       } else {
         setMensaje(`❌ ${data?.mensaje || "Error en el registro"}`);
@@ -41,16 +49,6 @@ export default function Registrarse() {
 
   return (
     <main>
-          
-          <nav style={{ fontSize: "8px"}}>
-            <ul className="lista-de-botones">
-              <li><Link href="/" className="btn-nav">Home</Link></li>
-              <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>
-              <li><Link href="/geolocalizacion" className="btn-nav">Geolocalización</Link></li>
-              <li><Link href="/iniciarsesion" className="btn-nav">Iniciar Sesión</Link></li>
-              <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
-            </ul>
-          </nav>
           <h1 className="titulo-pagina">Registrarse</h1>
           <section className="form-container">
             <form className="form-registro" onSubmit={handleSubmit}>

@@ -3,6 +3,7 @@ import Link from "next/dist/client/link";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import "../estilos/estilo-geolocalizacion.css";
+import { useSession } from "@/app/hooks/useSession";
 
 
 const MapaReportes = dynamic(
@@ -22,6 +23,7 @@ interface Reporte {
 }
 
 export default function Home() {
+  const { usuario } = useSession();
   const [reportes, setReportes] = useState<Reporte[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -53,19 +55,18 @@ export default function Home() {
 
   return (
     <main className="p-4">
-      {/* NAV */}
-      <nav style={{ fontSize: "8px" }}>
-        <h1 className="text-2xl font-bold mb-4" style={{ backgroundColor: "#334155", color: "white", padding: "10px", borderRadius: "5px" }}>
-          🔥 Geolocalización - Valle del Sol
-        </h1>
-        <ul className="lista-de-botones">
-          <li><Link href="/" className="btn-nav">Home</Link></li>
-          <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>
-          <li><Link href="/geolocalizacion" className="btn-nav">Geolocalización</Link></li>
-          <li><Link href="/iniciarsesion" className="btn-nav">Iniciar Sesión</Link></li>
-          <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
-        </ul>
-      </nav>
+      {/* HEADER */}
+      <h1 className="text-2xl font-bold mb-4" style={{ backgroundColor: "#334155", color: "white", padding: "10px", borderRadius: "5px" }}>
+        🔥 Geolocalización - Valle del Sol
+      </h1>
+      
+      {/* INFO DE USUARIO */}
+      {usuario && (
+        <div style={{ padding: "10px", backgroundColor: "#e0f2fe", border: "1px solid #0284c7", borderRadius: "8px", marginBottom: "20px" }}>
+          👤 <strong>Sesión activa:</strong> {usuario.email || usuario.nombre}
+        </div>
+      )}
+
       {/* SEPARADOR */}
       <div style={{ borderTop: "3px solid #334155", margin: "40px 0", padding: "20px 0" }}>
         <h2 style={{ textAlign: "center", color: "#334155" }}>📊 REPORTES GUARDADOS EN LA BASE DE DATOS</h2>

@@ -2,11 +2,15 @@
 import Link from "next/link";
 import "../estilos/estilo-iniciar-sesion.css";
 import { useState, FormEvent } from "react";
+import { useSession } from "@/app/hooks/useSession";
+import { useRouter } from "next/navigation";
 
 export default function IniciarSesion() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login } = useSession();
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,11 +32,12 @@ export default function IniciarSesion() {
       console.log(data);
 
       if (response.ok) {
-        // Guardar token y datos del usuario
-        localStorage.setItem('token', data.token || 'token-' + Date.now());
-        localStorage.setItem('usuario', JSON.stringify(data.usuario || { email, nombre: email.split('@')[0] }));
+        // Usar el contexto para guardar sesión
+        const token = data.token || 'token-' + Date.now();
+        const usuario = data.usuario || { email, nombre: email.split('@')[0] };
+        login(usuario, token);
         // Redirigir a perfil
-        window.location.href = '/perfil';
+        router.push('/perfil');
       } else {
         setError(data?.message || "Error al iniciar sesión.");
       }
@@ -47,17 +52,6 @@ export default function IniciarSesion() {
 
       {/* TÍTULO */}
       <h1 className="titulo-pagina">Iniciar Sesión</h1>
-
-      {/* NAV */}
-      <nav style={{ fontSize: "8px"}}>
-        <ul className="lista-de-botones">
-          <li><Link href="/" className="btn-nav">Home</Link></li>
-          <li><Link href="/reportes" className="btn-nav">Reportes</Link></li>
-          <li><Link href="/geolocalizacion" className="btn-nav">Geolocalización</Link></li>
-          <li><Link href="/iniciarsesion" className="btn-nav">Iniciar Sesión</Link></li>
-          <li><Link href="/registrarse" className="btn-nav">Registrarse</Link></li>
-        </ul>
-      </nav>
 
       {/* FORMULARIO */}
       <section className="form-container">

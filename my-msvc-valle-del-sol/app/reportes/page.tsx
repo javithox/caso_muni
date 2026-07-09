@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import "../estilos/estilo-geolocalizacion.css";
+import { useSession } from "@/app/hooks/useSession";
+import { useRouter } from "next/navigation";
 
 // Simple type for report objects. Adjust fields as needed.
 type Reporte = Record<string, any>;
@@ -14,284 +15,215 @@ const OpenStreetMapComponent = dynamic(
   { ssr: false, loading: () => <div>Cargando mapa...</div> }
 );
 
-const OneStreetMap = dynamic(
+const MapaReportes = dynamic(
   () => import("@/app/components/MapaReportes"),
   { ssr: false, loading: () => <div>Cargando mapa de reportes...</div> }
 );
 
 export default function Reportes() {
+  const { usuario } = useSession();
+  const router = useRouter();
   const [reportes, setReportes] = useState<Reporte[]>([]);
-    const [cargando, setCargando] = useState(true);
-    const [error, setError] = useState("");
-    useEffect(() => {
-      cargarReportes();
-    }, []);
-  
-    const cargarReportes = async () => {
-      try {
-        setCargando(true);
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
-        const response = await fetch(`${API_URL}/api/reportes`);
-  
-        if (!response.ok) {
-          throw new Error(`Error al cargar reportes: ${response.status}`);
-        }
-  
-        const datos = await response.json();
-        setReportes(datos);
-        setError("");
-      } catch (err: any) {
-        console.error("Error:", err);
-        setError(`No se pudieron cargar los reportes: ${err.message}`);
-      } finally {
-        setCargando(false);
-      }
-    };
-
-  const [ubicacion, setUbicacion] =
-  useState<any>(null);
-
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+  const [ubicacion, setUbicacion] = useState<any>(null);
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const [enviandoReporte, setEnviandoReporte] = useState(false);
 
-  console.log("API_URL:", API_URL);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
 
+  // Cargar reportes
   useEffect(() => {
-  const ubicacionGuardada =
-    localStorage.getItem(
-      "ubicacionIncendio"
-    );
+    cargarReportes();
+  }, []);
 
-  if (ubicacionGuardada) {
-    setUbicacion(
-      JSON.parse(ubicacionGuardada)
-    );
-  }
-}, []);
+  const cargarReportes = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/reportes`);
 
-  const [latitud, setLatitud] =
-    useState("");
+      if (!response.ok) {
+        throw new Error(`Error al cargar reportes: ${response.status}`);
+      }
 
-  const [longitud, setLongitud] =
-    useState("");
-
-  const enviarReporte = async () => {
-
-  if (!ubicacion) {
-
-    alert(
-      "Selecciona una ubicación"
-    );
-
-    return;
-  }
-
-  const reporte = {
-
-    titulo,
-
-    descripcion,
-
-    latitud: ubicacion.lat,
-
-    longitud: ubicacion.lng,
-
-    ubicacionId:
-      crypto.randomUUID(),
-
-    direccion:
-      "Ubicación seleccionada",
-
-    placeMapsId: "",
-
-    estado: "PENDIENTE",
-
-    reportadoPor:
-      "Usuario",
-
-    contactoEmergencia: "",
-
-    nivelSeveridad: 3,
-
+      const datos = await response.json();
+      setReportes(datos);
+      setError("");
+    } catch (err: any) {
+      console.error("Error:", err);
+      setError(`No se pudieron cargar los reportes: ${err.message}`);
+    } finally {
+      setCargando(false);
+    }
   };
 
-  try {
+  // Cargar ubicación guardada
+  useEffect(() => {
+    const ubicacionGuardada = localStorage.getItem("ubicacionIncendio");
+    if (ubicacionGuardada) {
+      setUbicacion(JSON.parse(ubicacionGuardada));
+    }
+  }, []);
 
-    const response =
-      await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/reportes`,
-        {
-
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-
-          body: JSON.stringify(
-            reporte
-          ),
-        }
-      );
-
-    if (!response.ok) {
-
-      throw new Error(
-        "Error enviando reporte"
-      );
+  const enviarReporte = async () => {
+    if (!usuario) {
+      alert("⚠️ Debes iniciar sesión para reportar un incendio");
+      router.push("/iniciarsesion");
+      return;
     }
 
-    const data =
-      await response.json();
+    if (!ubicacion) {
+      alert("Selecciona una ubicación");
+      return;
+    }
 
-    console.log(
-      "Reporte guardado:",
-      data
-    );
+    if (!titulo || !descripcion) {
+      alert("Por favor completa el título y la descripción");
+      return;
+    }
 
-    // LIMPIAR UBICACIÓN
-    localStorage.removeItem(
-      "ubicacionIncendio"
-    );
+    setEnviandoReporte(true);
 
-    // LIMPIAR FORMULARIO
-    setTitulo("");
+    const reporte = {
+      titulo,
+      descripcion,
+      latitud: ubicacion.lat,
+      longitud: ubicacion.lng,
+      ubicacionId: crypto.randomUUID(),
+      direccion: "Ubicación seleccionada",
+      placeMapsId: "",
+      estado: "PENDIENTE",
+      reportadoPor: usuario.email || usuario.nombre || "Usuario",
+      contactoEmergencia: usuario.telefono || "",
+      nivelSeveridad: 3,
+    };
 
-    setDescripcion("");
+    try {
+      const response = await fetch(`${API_URL}/api/reportes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(reporte),
+      });
 
-    setUbicacion(null);
+      if (!response.ok) {
+        throw new Error("Error enviando reporte");
+      }
 
-    alert(
-      "🔥 Reporte guardado en la base de datos!"
-    );
+      const data = await response.json();
+      console.log("Reporte guardado:", data);
 
-    window.location.href =
-      "/geolocalizacion";
+      // Limpiar datos
+      localStorage.removeItem("ubicacionIncendio");
+      setTitulo("");
+      setDescripcion("");
+      setUbicacion(null);
 
-  } catch (error) {
-
-    console.error(error);
-
-    alert(
-      "Error conectando backend"
-    );
-  }
-};
+      alert("🔥 Reporte guardado en la base de datos!");
+      
+      // Recargar reportes
+      await cargarReportes();
+    } catch (error) {
+      console.error(error);
+      alert("Error conectando backend");
+    } finally {
+      setEnviandoReporte(false);
+    }
+  };
 
   return (
     <main>
+      <h1 style={{ marginTop: "20px", marginBottom: "20px", color: "#334155" }}>
+        🔥 Reportar Incendio
+      </h1>
+
       {/* SECCIÓN 1: Seleccionar Ubicación */}
       <div style={{ marginBottom: "40px" }}>
-        <h2 style={{ marginTop: "20px", marginBottom: "10px", color: "#334155" ,backgroundColor:'#fcfcfc', padding:'10px'}}>
+        <h2 style={{ marginTop: "20px", marginBottom: "10px", color: "#334155", backgroundColor: "#fcfcfc", padding: "10px" }}>
           📍 Selecciona la ubicación del incendio
         </h2>
         <OpenStreetMapComponent />
       </div>
-      <h1 style={{bottom:'100px'}}>🔥 Reportar Incendio</h1>
 
-      <nav style={{ fontSize: "8px"}}>
-        <ul className="lista-de-botones">
-          <li>
-            <Link href="/" className="btn-nav">
-              Home
-            </Link>
-          </li>
+      {/* SECCIÓN 2: Información del Reporte */}
+      {usuario && (
+        <div style={{ maxWidth: "400px", margin: "20px auto", padding: "20px", backgroundColor: "#f8fafc", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+          <h2 style={{ color: "#334155", marginBottom: "15px" }}>ℹ️ Información del Reporte</h2>
+          
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Título:</label>
+            <input
+              type="text"
+              placeholder="Ej: Incendio en Cerro Verde"
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px",
+                border: "1px solid #cbd5e1",
+                borderRadius: "4px",
+                boxSizing: "border-box"
+              }}
+            />
+          </div>
 
-          <li>
-            <Link
-              href="/reportes"
-              className="btn-nav"
-            >
-              Reportes
-            </Link>
-          </li>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Descripción:</label>
+            <textarea
+              placeholder="Describe el incendio, extensión aproximada, dirección del viento, etc."
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px",
+                border: "1px solid #cbd5e1",
+                borderRadius: "4px",
+                minHeight: "100px",
+                boxSizing: "border-box"
+              }}
+            />
+          </div>
 
-          <li>
-            <Link
-              href="/geolocalizacion"
-              className="btn-nav"
-            >
-              Geolocalización
-            </Link>
-          </li>
+          {ubicacion && (
+            <div style={{ marginBottom: "15px", padding: "10px", backgroundColor: "#e0f2fe", border: "1px solid #0284c7", borderRadius: "8px" }}>
+              <h3>📍 Ubicación seleccionada</h3>
+              <p><strong>Latitud:</strong> {ubicacion.lat.toFixed(4)}</p>
+              <p><strong>Longitud:</strong> {ubicacion.lng.toFixed(4)}</p>
+            </div>
+          )}
 
-          <li>
-            <Link
-              href="/iniciarsesion"
-              className="btn-nav"
-            >
-              Iniciar Sesión
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/registrarse"
-              className="btn-nav"
-            >
-              Registrarse
-            </Link>
-          </li>
-        </ul>
-      </nav>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          maxWidth: "400px",
-        }}
-      />
-        <input style={{boxShadow:'2px 2px 2px 2px', margin:'10px'}}
-          type="text"
-          placeholder="Título"
-          value={titulo}
-          onChange={(e) =>
-            setTitulo(e.target.value)
-          }
-        />
-
-        <textarea style={{boxShadow:'2px 2px 2px 2px', margin:'10px'}}
-          placeholder="Descripción"
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-        />
-
-        {ubicacion && (
-          <div
+          <button
+            onClick={enviarReporte}
+            disabled={enviandoReporte}
             style={{
-              marginTop: "15px",
+              width: "100%",
               padding: "10px",
-              border: "1px solid gray",
-              borderRadius: "8px",
+              backgroundColor: enviandoReporte ? "#9ca3af" : "#dc2626",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: enviandoReporte ? "not-allowed" : "pointer",
+              fontSize: "16px",
+              fontWeight: "bold"
             }}
           >
-            <h3>
-              📍 Ubicación seleccionada
-            </h3>
+            {enviandoReporte ? "Enviando..." : "🚨 Enviar Reporte"}
+          </button>
+        </div>
+      )}
 
-            <p>
-              <strong>Latitud:</strong>{" "}
-              {ubicacion.lat}
-            </p>
-
-            <p>
-              <strong>Longitud:</strong>{" "}
-              {ubicacion.lng}
-            </p>
-          </div>
-        )}
-
-        <button onClick={enviarReporte} style={{backgroundColor:"red", borderRadius:'7%',boxShadow:'5px 5px 5px 5px' ,fontSize:'20px', margin:'10px'}}>
-          Enviar Reporte
-        </button>
+      {!usuario && (
+        <div style={{ maxWidth: "400px", margin: "20px auto", padding: "20px", backgroundColor: "#fef3c7", borderRadius: "8px", border: "1px solid #fcd34d" }}>
+          <h2 style={{ color: "#92400e" }}>⚠️ Sesión Requerida</h2>
+          <p>Necesitas iniciar sesión para reportar un incendio.</p>
+          <Link href="/iniciarsesion" className="btn-nav" style={{ display: "inline-block", marginTop: "10px", padding: "10px 20px", backgroundColor: "#2563eb", color: "white", borderRadius: "4px", textDecoration: "none" }}>
+            Iniciar Sesión
+          </Link>
+        </div>
+      )}
     </main>
   );
-}
-function setCargando(arg0: boolean) {
-  throw new Error("Function not implemented.");
 }
 
