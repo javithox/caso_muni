@@ -1,101 +1,50 @@
 services:
   base_de_datos:
     image: postgres:15-alpine
-    container_name: database_postgres
-    restart: always
+    container_name: mi_postgres
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-valle_de_sol}
-      POSTGRES_INITDB_ARGS: "-c max_connections=50"
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: mi_base_datos
     ports:
       - "5432:5432"
     volumes:
       - datos_postgres:/var/lib/postgresql/data
-      - ./db:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-      start_period: 20s
-    networks:
-      - app-network
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 512M
-        reservations:
-          cpus: '0.5'
-          memory: 256M
 
   api_backend:
     build: ./backend
     container_name: mi_backend
-    restart: always
     ports:
       - "8081:8081"
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      NODE_OPTIONS: "--max-old-space-size=256"
-      DB_HOST: base_de_datos
-      DB_PORT: 5432
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      DB_NAME: ${DB_NAME:-valle_de_sol}
+      - PORT=8081
+      - DATABASE_URL=postgresql://usuario:password123@base_de_datos:5432/mi_base_datos?schema=public
     depends_on:
-      base_de_datos:
-        condition: service_healthy
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/health"] || exit 1
-      interval: 15s
-      timeout: 5s
-      retries: 2
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 512M
-        reservations:
-          cpus: '0.5'
-          memory: 256M
+      - base_de_datos
+
+
+
 
   vista_frontend:
-    build: ./my-msvc-valle-del-sol
+    image: node:22-alpine # <--- Cambiado de 18-alpine a 22-alpine
     container_name: mi_frontend
-    restart: always
+    working_dir: /app
     ports:
       - "3000:3000"
+    volumes:
+      - ./my-msvc-valle-del-sol:/app
+      - /app/node_modules
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8081}
+      - NODE_ENV=development
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_API_URL=http://localhost:8081
+    command: sh -c "npm install && npm run dev"
     depends_on:
       - api_backend
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"] || exit 1
-      interval: 15s
-      timeout: 5s
-      retries: 2
-      start_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
+
+
+
 
 volumes:
   datos_postgres:
-    driver: local
-
-networks:
-  app-network:
-    driver: bridge
