@@ -1,0 +1,31 @@
+services:
+  base_de_datos:
+    image: postgres:15-alpine
+    container_name: database_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: valle_de_sol
+    ports:
+      - "5432:5432"
+    volumes:
+      - datos_postgres:/var/lib/postgresql/data
+
+  api_backend:
+    build: ./backend
+    container_name: mi_backend
+    ports:
+      - "8081:8081"
+    depends_on:
+      - base_de_datos
+
+  vista_frontend:
+    build: ./frontend
+    container_name: mi_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api_backend
+
+volumes:
+  datos_postgres:
