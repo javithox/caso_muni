@@ -86,3 +86,8 @@ ejecutar pruebas
 
 npm test
 
+comando para arreglar error de backend y base de datos
+
+docker compose exec api_backend npx prisma db push
+
+

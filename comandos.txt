@@ -1,0 +1,41 @@
+name: Deploy to AWS EC2
+
+# Elige cuándo se activa la automatización (al hacer push a la rama main o master)
+on:
+  push:
+    branches:
+      - branch6  # Cambia por "master" si tu rama principal se llama así
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Se conecta a tu servidor EC2 usando los secretos guardados en GitHub
+    - name: Executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}
+        port: 22
+        script: |
+          # 2. Entra a la carpeta del proyecto en la EC2
+          cd /home/ubuntu/caso_muni
+          
+          # 3. Baja los últimos cambios de código desde GitHub de forma limpia
+          git reset --hard HEAD
+          git pull origin branch6
+          
+          # 4. Apaga los contenedores viejos y compila los nuevos cambios en segundo plano
+          docker compose down
+          docker compose up -d --build
+          
+          # 5. Sincroniza la base de datos por si añadiste nuevas tablas en TypeScript
+          docker exec mi_backend npx prisma db push
+
+probar automatizacion
+
+git add .
+git commit -m "Prueba de automatización"
+git push origin branch6
