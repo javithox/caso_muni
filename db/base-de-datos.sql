@@ -1,6 +1,7 @@
 -- Crear base de datos (si no existe)
 -- CREATE DATABASE valle_del_sol;
 
+
 -- Tabla de Usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
     id BIGSERIAL PRIMARY KEY,
