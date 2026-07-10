@@ -1,17 +1,56 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+      - branch6
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
     steps:
-    - name: Executing remote ssh commands using ssh key
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.EC2_HOST }}       
-        username: ubuntu                    
-        key: ${{ secrets.EC2_SSH_KEY }}     
-        port: 22
-        script_stop: true                   
-        script: |
-          cd ~/caso_muni
-          git reset --hard HEAD
-          git pull origin branch6
-          sudo docker-compose down
-          sudo docker-compose up -d --build
-          # El parámetro -T evita bloqueos por falta de terminal interactiva en GitHub Actions
-          sudo docker-compose exec -T api_backend npx prisma db push
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            BRANCH_NAME="${{ github.ref_name }}"
+            APP_DIR="$HOME/caso_muni"
+
+            echo "Desplegando rama: $BRANCH_NAME"
+
+            if [ ! -d "$APP_DIR/.git" ]; then
+              echo "El repositorio no existe en $APP_DIR. Clónalo una vez en la EC2 o ajusta la ruta."
+              exit 1
+            fi
+
+            cd "$APP_DIR"
+            git config --global --add safe.directory "$APP_DIR"
+            git fetch origin --prune
+            git checkout "$BRANCH_NAME"
+            git reset --hard "origin/$BRANCH_NAME"
+
+            if command -v docker compose >/dev/null 2>&1; then
+              COMPOSE_CMD="docker compose"
+            elif command -v docker-compose >/dev/null 2>&1; then
+              COMPOSE_CMD="docker-compose"
+            else
+              echo "Docker Compose no está disponible en la EC2"
+              exit 1
+            fi
+
+            sudo $COMPOSE_CMD down || true
+            sudo $COMPOSE_CMD up -d --build
+
+            echo "Esperando a que los servicios estén listos..."
+            sleep 15
+
+            sudo $COMPOSE_CMD exec -T api_backend npm run prisma:push
+            sudo $COMPOSE_CMD ps
