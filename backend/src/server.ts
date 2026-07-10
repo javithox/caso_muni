@@ -1,4 +1,7 @@
 import cors from 'cors';
+import express from 'express';
+
+const app = express();
 
 const allowedOrigins = ['https://caso-muni-omega.vercel.app'];
 
