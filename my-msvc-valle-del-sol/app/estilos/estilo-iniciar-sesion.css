@@ -1,0 +1,68 @@
+/* Importar estilos base */
+@import "tailwindcss";
+@import "./estilo-pagina.css";
+
+/* Estilos específicos para la página de Iniciar Sesión */
+
+.form-login {
+  background: var(--background);
+  border: 2px solid var(--secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-login::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+  animation: slideIn 1.5s infinite;
+}
+
+@keyframes slideIn {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+.form-login label {
+  color: var(--secondary);
+  font-size: 0.95rem;
+}
+
+.form-login input {
+  border: 1.5px solid var(--border);
+  background: var(--background);
+}
+
+.form-login input:focus {
+  border-color: var(--secondary);
+  background: var(--background);
+}
+
+.form-login button {
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.form-login button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+}
+
+@media (max-width: 640px) {
+  .form-login {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-login::before {
+    animation: none;
+  }
+}

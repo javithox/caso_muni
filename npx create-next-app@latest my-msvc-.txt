@@ -4,9 +4,90 @@ npm install -g npm@11.12.1
 
 npm install lucide-react
 
+npm install react-leaflet leaflet
+npm install --save-dev @types/leaflet
+
 npm run dev
 
 
 comando para vercel
 
-npx plugins add vercel/vercel-plugin
+cd my-msvc-valle-del-sol
+npx tsc --noEmit
+npm run dev
+
+npm install @vercel/blob
+
+npx plugins add vercel/vercel-plugi
+
+instalar dependencias jest v29
+
+npm install -D jest@29.7.0 ts-jest@29.4.11 @types/jest@29.5.14
+
+
+verificar versiones
+
+npx jest --version
+
+comando para generar configuracion desde cero
+
+npx ts-jest config:init
+
+contenido a remplazar en la configuracion
+/** @type {import('ts-jest').JestConfigWithTsJest} */
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "node",
+  roots: ["<rootDir>/src"],
+  testMatch: ["**/*.test.ts"],
+  moduleFileExtensions: ["ts", "js", "json"],
+  transform: {
+    "^.+\\.ts$": "ts-jest",
+  },
+  clearMocks: true,
+};
+
+eliminar nodes y package-lock
+
+Remove-Item -Recurse -Force node_modules
+Remove-Item package-lock.json
+
+comandos docker 
+
+# Construir la imagen
+docker build -t valle-del-sol-frontend:latest .
+
+# Ejecutar el contenedor
+docker run -d -p 3000:3000 --name valle-frontend valle-del-sol-frontend:latest
+
+base de datos
+
+# Construir la imagen
+docker build -t valle-del-sol-backend:latest .
+
+# Ejecutar el contenedor
+
+docker run -d -p 8081:8081 --name valle-backend valle-del-sol-backend:latest
+docker run --name valle-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=valle_del_sol -p 5432:5432 -d postgres:16
+Script .SQL
+docker exec -i valle-postgres psql -U postgres -d valle_del_sol < .\db\crear_tabla_usuarios.sql
+docker exec -i valle-postgres psql -U postgres -d valle_del_sol < .\db\base-de-datos.sql
+
+reinstalar
+
+npm install
+
+comprobar versiones de pruebas
+
+npm ls jest
+npm ls ts-jest
+
+ejecutar pruebas
+
+npm test
+
+comando para arreglar error de backend y base de datos
+
+docker compose exec api_backend npx prisma db push
+
+

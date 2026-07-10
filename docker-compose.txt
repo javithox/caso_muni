@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  base_de_datos:
+    image: postgres:15-alpine
+    container_name: database_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-valle_de_sol}
+    ports:
+      - "5432:5432"
+    volumes:
+      - datos_postgres:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  api_backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mi_backend
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      NODE_ENV: production
+      DB_HOST: base_de_datos
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-valle_de_sol}
+    depends_on:
+      base_de_datos:
+        condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  vista_frontend:
+    build:
+      context: ./my-msvc-valle-del-sol
+      dockerfile: Dockerfile
+    container_name: mi_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://${API_HOST:-localhost}:8081
+    depends_on:
+      - api_backend
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  datos_postgres:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

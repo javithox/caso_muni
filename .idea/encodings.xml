@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/backend/msvc-localizacion/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/msvc-localizacion/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/msvc-reporte/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/msvc-reporte/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/msvc-alerta/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/msvc-alerta/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/msvc-geolocalizacion/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/msvc-localizacion/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/msvc-localizacion/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/msvc-reporte/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/msvc-reporte/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend1.1/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

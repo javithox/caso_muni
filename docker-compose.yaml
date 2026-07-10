@@ -1,0 +1,57 @@
+services:
+  base_de_datos:
+    image: postgres:15-alpine
+    container_name: mi_postgres
+    restart: always  # <--- Obligatorio en producción para que auto-arranque si la EC2 se cae
+    environment:
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: password123 # <--- Cambia esto por una clave segura
+      POSTGRES_DB: mi_base_datos
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data # <--- Guarda los datos en una carpeta local de la EC2
+
+
+  api_backend:
+    build: ./backend
+    container_name: mi_backend
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - DATABASE_URL=postgresql://usuario:password123@base_de_datos:5432/mi_base_datos?schema=public
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: sh -c "npm install && npx prisma generate && npm run build && npm run start"
+    depends_on:
+      - base_de_datos
+
+
+
+
+  vista_frontend:
+    image: node:22-alpine # <--- Cambiado de 18-alpine a 22-alpine
+    container_name: mi_frontend
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./my-msvc-valle-del-sol:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_API_URL=http://localhost:8081
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - api_backend
+
+
+
+
+volumes:
+  datos_postgres:

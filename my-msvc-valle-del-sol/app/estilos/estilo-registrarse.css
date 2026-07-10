@@ -1,0 +1,67 @@
+/* Importar estilos base */
+@import "tailwindcss";
+@import "./estilo-pagina.css";
+/* Estilos específicos para la página de Registro */
+
+.form-registro {
+  background: var(--background);
+  border: 2px solid var(--info);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-registro::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--info), transparent);
+  animation: slideInReg 1.5s infinite;
+}
+
+@keyframes slideInReg {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+.form-registro label {
+  color: var(--info);
+  font-size: 0.95rem;
+}
+
+.form-registro input {
+  border: 1.5px solid var(--border);
+  background: var(--background);
+}
+
+.form-registro input:focus {
+  border-color: var(--info);
+  background: var(--background);
+}
+
+.form-registro button {
+  background: linear-gradient(135deg, var(--info) 0%, #0369a1 100%);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+.form-registro button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+}
+
+@media (max-width: 640px) {
+  .form-registro {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-registro::before {
+    animation: none;
+  }
+}
