@@ -1,23 +1,13 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
+import cors from 'cors';
 
-// Lista de dominios permitidos
-const allowedOrigins = [
-  'https://caso-muni-omega.vercel.app', // Tu frontend en Vercel
-  'http://localhost:3000'               // Tu entorno de desarrollo local
-];
+const allowedOrigins = ['https://caso-muni-omega.vercel.app'];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    // Permitir peticiones sin origen (como Postman o apps móviles)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Bloqueado por políticas de CORS'));
+      callback(new Error('Not allowed by CORS'));
     }
-  },
-  credentials: true // Actívalo si usas cookies, sesiones o tokens de autenticación
+  }
 }));
