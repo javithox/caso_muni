@@ -11,7 +11,8 @@
   "exclude": [
   "node_modules",
   "dist",
-  "prisma.config.ts"
+  "prisma.config.ts",
+  "src/tests"
   ]
 
 }
