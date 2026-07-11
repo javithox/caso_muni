@@ -58,7 +58,7 @@ export default function Navigation() {
         ) : (
           <>
             <li>
-              <Link href="/iniciarsesion" className="btn-nav">
+              <Link href="/IniciarSesion" className="btn-nav">
                 Iniciar Sesión
               </Link>
             </li>
