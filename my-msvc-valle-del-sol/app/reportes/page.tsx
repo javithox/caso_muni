@@ -31,7 +31,7 @@ export default function Reportes() {
   const [descripcion, setDescripcion] = useState("");
   const [enviandoReporte, setEnviandoReporte] = useState(false);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://https://caso-muni.onrender.com:8081";
 
   // Cargar reportes
   useEffect(() => {
