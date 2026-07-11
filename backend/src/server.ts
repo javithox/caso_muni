@@ -8,6 +8,9 @@ const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+app.use(express.json());
+
+app.use("/api/reportes", reportesRouter);
 
 const allowedOrigins = ['https://caso-muni-omega.vercel.app'];
 
