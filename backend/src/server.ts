@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import reporteRoutes from "./routes/reporte.routes"; // ajusta la ruta si cambia
+import reporteRoutes from "./routes/reporte.routes";
+import authRoutes from "./routes/auth.routes";
 
 const app = express();
 
@@ -20,8 +21,8 @@ app.use(cors({
   }
 }));
 
-// ← ESTA LÍNEA ES LA QUE FALTA
 app.use("/api/reportes", reporteRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 8081;
 
