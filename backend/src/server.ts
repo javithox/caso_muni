@@ -3,6 +3,12 @@ import express from 'express';
 
 const app = express();
 
+const PORT = process.env.PORT || 8081;
+
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
+
 const allowedOrigins = ['https://caso-muni-omega.vercel.app'];
 
 app.use(cors({
