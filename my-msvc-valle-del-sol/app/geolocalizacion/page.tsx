@@ -18,7 +18,7 @@ interface Reporte {
   latitud: number;
   longitud: number;
   estado: string;
-  severidad: number;
+  severidad: string;
   createdAt: string;
 }
 
