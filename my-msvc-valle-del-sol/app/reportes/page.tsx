@@ -218,7 +218,7 @@ export default function Reportes() {
         <div style={{ maxWidth: "400px", margin: "20px auto", padding: "20px", backgroundColor: "#fef3c7", borderRadius: "8px", border: "1px solid #fcd34d" }}>
           <h2 style={{ color: "#92400e" }}>⚠️ Sesión Requerida</h2>
           <p>Necesitas iniciar sesión para reportar un incendio.</p>
-          <Link href="/iniciarsesion" className="btn-nav" style={{ display: "inline-block", marginTop: "10px", padding: "10px 20px", backgroundColor: "#2563eb", color: "white", borderRadius: "4px", textDecoration: "none" }}>
+          <Link href="/IniciarSesion" className="btn-nav" style={{ display: "inline-block", marginTop: "10px", padding: "10px 20px", backgroundColor: "#2563eb", color: "white", borderRadius: "4px", textDecoration: "none" }}>
             Iniciar Sesión
           </Link>
         </div>
