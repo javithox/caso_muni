@@ -29,6 +29,7 @@ export const crearReporte = async (
       descripcion,
       latitud,
       longitud,
+      severidad,
     } = req.body;
 
     const reporte =
@@ -39,7 +40,7 @@ export const crearReporte = async (
           latitud: Number(latitud),
           longitud: Number(longitud),
           estado: "pendiente",
-          severidad: 3,
+          severidad,
         },
       });
 

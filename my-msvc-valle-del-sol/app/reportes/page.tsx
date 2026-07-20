@@ -28,6 +28,7 @@ export default function Reportes() {
   const [error, setError] = useState("");
   const [ubicacion, setUbicacion] = useState<any>(null);
   const [titulo, setTitulo] = useState("");
+  const [severidad, setSeveridad] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [enviandoReporte, setEnviandoReporte] = useState(false);
 
@@ -77,25 +78,25 @@ export default function Reportes() {
       return;
     }
 
-    if (!titulo || !descripcion) {
-      alert("Por favor completa el título y la descripción");
-      return;
-    }
+    if (!titulo || !descripcion || !severidad) {
+    alert("Completa todos los campos");
+    return;
+  }
 
     setEnviandoReporte(true);
 
-    const reporte = {
+      const reporte = {
       titulo,
       descripcion,
+      severidad,
       latitud: ubicacion.lat,
       longitud: ubicacion.lng,
       ubicacionId: crypto.randomUUID(),
       direccion: "Ubicación seleccionada",
       placeMapsId: "",
-      estado: "PENDIENTE",
+      estado: usuario.activo ? "activo" : "inactivo",
       reportadoPor: usuario.email || usuario.nombre || "Usuario",
-      contactoEmergencia: usuario.telefono || "",
-      nivelSeveridad: 3,
+      contactoEmergencia: usuario.telefono || ""
     };
 
     try {
@@ -119,6 +120,7 @@ export default function Reportes() {
       localStorage.removeItem("ubicacionIncendio");
       setTitulo("");
       setDescripcion("");
+      setSeveridad("");
       setUbicacion(null);
 
       alert("🔥 Reporte guardado en la base de datos!");
@@ -183,7 +185,30 @@ export default function Reportes() {
                 minHeight: "100px",
                 boxSizing: "border-box"
               }}
+
+              
             />
+          </div>
+
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Nivel de Severidad:</label>
+            <select
+              value={severidad}
+              onChange={(e) => setSeveridad(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px",
+                border: "1px solid #cbd5e1",
+                borderRadius: "4px",
+                boxSizing: "border-box"
+              }}
+            >
+              <option value="">Selecciona severidad</option>
+              <option value="BAJA">🟢 Baja</option>
+              <option value="MEDIA">🟡 Media</option>
+              <option value="ALTA">🟠 Alta</option>
+              <option value="CRITICA">🔴 Crítica</option>
+            </select>
           </div>
 
           {ubicacion && (
