@@ -52,10 +52,24 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #d3b84d;
-    --foreground: #ededed;
-    --light: #1e293b;
-    --border: #334155;
+      /* Light Mode */
+  --background: #ffffff;
+  --foreground: #171717;
+  
+  /* Colors */
+  --primary: #f59e42;
+  --primary-light: #fffbe6;
+  --primary-dark: #d97706;
+  --secondary: #3b82f6;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #0ea5e9;
+  
+  /* Neutral */
+  --dark: #1e293b;
+  --light: #f5f7fa;
+  --border: #e2e8f0;
   }
 }
 
