@@ -68,7 +68,7 @@ export default function Reportes() {
   const enviarReporte = async () => {
     if (!usuario) {
       alert("⚠️ Debes iniciar sesión para reportar un incendio");
-      router.push("/IniciarSesion");
+      router.push(Link.href = "/IniciarSesion");
       return;
     }
 
