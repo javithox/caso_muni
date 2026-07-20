@@ -35,7 +35,7 @@ export default function Home() {
   const cargarReportes = async () => {
     try {
       setCargando(true);
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://caso-muni.onrender.com";
       const response = await fetch(`${API_URL}/api/reportes`);
 
       if (!response.ok) {
