@@ -165,7 +165,7 @@ export default function Home() {
                     <strong>📍 Ubicación:</strong> {reporte.latitud.toFixed(4)}, {reporte.longitud.toFixed(4)}
                   </p>
                   <p style={{ margin: "5px 0", fontSize: "14px" }}>
-                    <strong>🚨 Severidad:</strong> {reporte.severidad}/10
+                    <strong>🚨 Severidad:</strong> {reporte.severidad}
                   </p>
                   <p style={{ margin: "5px 0", fontSize: "14px" }}>
                     <strong>📊 Estado:</strong> {reporte.estado}
