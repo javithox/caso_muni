@@ -12,7 +12,7 @@ const allowedOrigins = [
 ];
 
 app.get('/', (req, res) => {
-  res.send('¡El servidor está funcionando correctamente!');
+  res.send('¡El servidor backend de valle del sol ☀️ está funcionando correctamente!');
 });
 
 app.use(cors({
