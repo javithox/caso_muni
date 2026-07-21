@@ -141,8 +141,8 @@ export default function Home() {
           >
             {reportes.map((reporte) => {
               let severidadColor = "#ff6b6b"; // Rojo para alta
-              if (reporte.severidad <= 3) severidadColor = "#51cf66"; // Verde
-              else if (reporte.severidad <= 6) severidadColor = "#ffa94d"; // Naranja
+              if (reporte.severidad === "baja" || reporte.severidad === "BAJA") severidadColor = "#51cf66"; // Verde
+              else if (reporte.severidad === "media" || reporte.severidad === "MEDIA") severidadColor = "#ffa94d"; // Naranja
 
               return (
                 <div
