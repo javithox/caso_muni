@@ -11,6 +11,10 @@ const allowedOrigins = [
   "https://caso-muni-omega.vercel.app"
 ];
 
+app.get('/', (req, res) => {
+  res.send('¡El servidor está funcionando correctamente!');
+});
+
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
